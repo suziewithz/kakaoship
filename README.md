@@ -1,11 +1,13 @@
 # kakaoship
 =========
 
+Installation
+--------------
 You will need to install the following
 
   - python 2.7.9
   
-Installation & Getting Started
+Getting Started
 --------------
 
   - Run analyzer.py
