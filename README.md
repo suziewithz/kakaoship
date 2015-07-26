@@ -23,6 +23,7 @@ Functions
   - messages sent by time.
   - (Undeveloped) number of emoticons sent by sender.
   - (Undeveloped) response time (in case of 1:1 chat)
+  - (Undeveloped) analyze most frequently used keywords
   
 Things to consider
 --------------
