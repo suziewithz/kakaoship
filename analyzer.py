@@ -1,10 +1,10 @@
 # -*- coding: utf8 -*-
 
-def increment ( key, dic ) :
+def increment ( dic, key, value) :
 	if key in dic :
-		dic[key] = dic[key] + 1
+		dic[key] = dic[key] + value
 	else :
-		dic[key] = 1
+		dic[key] = value
 
 log_file = open( "kakaotalk.txt" , 'r')
 
@@ -13,7 +13,7 @@ logs = log_file.readlines()
 send_ratio = {}
 msg_bytes = {}
 sent_time = {}
-kcount = 0
+kcount = {}
 total = 0
 
 for i in range(0,24) :
@@ -27,20 +27,17 @@ for log in logs :
 		start = log.find(",",21) +2
 		end = log.find(":",22)
 		if (start > 1 and end > 0) :
-			# check send ratio.
 			sender = log[start:end]
-			increment(sender, send_ratio)
+			msg = log[end+2:-1]
+			
+			# check send ratio.
+			increment(send_ratio, sender, 1)
 
 			# calculate msg bytes by sender
-			if sender in msg_bytes : 
-				msg_bytes[sender] = msg_bytes[sender] + len(log[end:])
-
-			else : 
-				msg_bytes[sender] = len(log[end+2:-1])
-
+			increment(msg_bytes, sender, len(msg))
+			
 			# count k in msg.
-			kstring = log[end+2:-1].decode('utf-8')
-			kcount = kcount + kstring.count(unicode('ㅋ','utf-8'))
+			increment(kcount, sender, msg.decode('utf-8').count(unicode('ㅋ','utf-8')))
 
 			# calculate active time
 			start = log.find("," , 10) +2
@@ -50,7 +47,7 @@ for log in logs :
 				time = (int(log[start:start+middle]))%12
 				if str(log[end-2 : end]) == "PM" :
 					time = time + 12
-				increment(time, sent_time)
+				increment(sent_time, time, 1)
 
 
 print "Who sent how much messages? "
@@ -68,7 +65,8 @@ for msg in msg_bytes :
 
 print ""
 
-print "you guys wrote " + unicode('ㅋ','utf-8').encode('utf-8') + " " + str(kcount) + " byte times"
+for sender in kcount :
+	print sender + " wrote " + unicode('ㅋ','utf-8').encode('utf-8') + " " + str(kcount[sender]) + " byte times"
 
 print ""
 
