@@ -1,10 +1,13 @@
 # -*- coding: utf8 -*-
 
+import sys
+
 def increment ( dic, key, value) :
 	if key in dic :
 		dic[key] = dic[key] + value
 	else :
 		dic[key] = value
+
 
 log_file = open (sys.argv[1] , 'r')
 
@@ -14,7 +17,10 @@ send_ratio = {}
 msg_bytes = {}
 sent_time = {}
 kcount = {}
+keyword = {}
+emoticons = 0
 total = 0
+
 
 for i in range(0,24) :
 	sent_time[i] = 0
@@ -25,10 +31,10 @@ for log in logs :
 	if "Date Saved" not in log :
 		
 		start = log.find(",",21) +2
-		end = log.find(":",22)
+		end = log.find(":",22) -1
 		if (start > 1 and end > 0) :
 			sender = log[start:end]
-			msg = log[end+2:-1]
+			msg = log[end+2:-1].decode('utf-8')
 			
 			# check send ratio.
 			increment(send_ratio, sender, 1)
@@ -37,7 +43,10 @@ for log in logs :
 			increment(msg_bytes, sender, len(msg))
 			
 			# count k in msg.
-			increment(kcount, sender, msg.decode('utf-8').count(unicode('ㅋ','utf-8')))
+			increment(kcount, sender, msg.count(unicode('ㅋ','utf-8')))
+
+			if "(emoticon)" in msg or unicode('(이모티콘)', 'utf-8') in msg:
+				emoticons = emoticons + 1
 
 			# calculate active time
 			start = log.find("," , 10) +2
@@ -51,11 +60,12 @@ for log in logs :
 					time = time + 12
 				increment(sent_time, time, 1)
 
+			# analyze keyword
 
 print "Who sent how much messages? "
 
 for sender in send_ratio :
-	print str(sender) + "sent " + str(send_ratio[sender]) + " messages"
+	print str(sender) + " sent " + str(send_ratio[sender]) + " messages"
 	total = total + int(send_ratio[sender])
 
 print ""
@@ -63,12 +73,12 @@ print ""
 print "Msg bytes : "
 
 for msg in msg_bytes :
-	print str(msg) + "sent " + str(msg_bytes[msg]) + " bytes"
+	print str(msg) + " sent " + str(msg_bytes[msg]) + " bytes"
 
 print ""
 
 for sender in kcount :
-	print sender + " wrote " + unicode('ㅋ','utf-8').encode('utf-8') + " " + str(kcount[sender]) + " byte times"
+	print sender+ " wrote " + unicode('ㅋ','utf-8').encode('utf-8') + " " + str(kcount[sender]) + " byte times"
 
 print ""
 
@@ -76,6 +86,10 @@ print "When is the most active moment in this chat room?"
 for time in sorted(sent_time) :
 	print str(sent_time[time]) + " messages were sent at " + str(time) + " o'clock"
 	
+
+print ""
+
+print "you guys used emoticons " + str(emoticons) + " times"
 
 print ""
 print "totally, " + str(total) + " messages were sent"
