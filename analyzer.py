@@ -6,7 +6,7 @@ def increment ( dic, key, value) :
 	else :
 		dic[key] = value
 
-log_file = open( "kakaotalk.txt" , 'r')
+log_file = open (sys.argv[1] , 'r')
 
 logs = log_file.readlines()
 
@@ -43,7 +43,9 @@ for log in logs :
 			start = log.find("," , 10) +2
 			end = log.find("," , 15)
 			middle = log[start:end].find(":")
+
 			if (start > 0 and end > 0 and middle > 0) :
+				# make it military time. 0~23
 				time = (int(log[start:start+middle]))%12
 				if str(log[end-2 : end]) == "PM" :
 					time = time + 12
