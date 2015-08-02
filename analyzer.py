@@ -2,6 +2,7 @@
 
 import sys
 from konlpy.tag import Kkma
+import operator
 
 def increment ( dic, key, value) :
 	if key in dic :
@@ -92,8 +93,10 @@ print ""
 
 print ""
 
-for keyword in keywords :
-	print keyword + " : " + str(keywords[keyword])
+sorted_keywords = sorted(keywords)
+
+for i in range (0, 20)  :
+	print keyword + " : " + str(sorted_keywords[i])
 
 print ""
 
