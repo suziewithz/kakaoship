@@ -93,6 +93,7 @@ print ""
 
 print ""
 
+# sorted keywords has 'list' type. not dict.
 sorted_keywords = sorted(keywords.items(), key=lambda x:x[1], reverse = True)
 
 for i in range(0,20) :
