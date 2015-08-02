@@ -93,10 +93,12 @@ print ""
 
 print ""
 
-sorted_keywords = sorted(keywords)
+sorted_keywords = sorted(keywords.items(), key=lambda x:x[1])
 
-for i in range (0, 20)  :
-	print keyword + " : " + str(sorted_keywords[i])
+for i in range (0,20):
+	try :
+	except :
+		pass
 
 print ""
 
