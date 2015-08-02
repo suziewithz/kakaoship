@@ -1,5 +1,4 @@
-#
-kakaoship
+#kakaoship
 
 Installation
 --------------
@@ -22,9 +21,10 @@ Functions
   - bytes by sender.
   - count "ㅋ" used in chatroom by sender.
   - messages sent by time.
-  - (Undeveloped) number of emoticons sent by sender.
-  - (Undeveloped) response time (in case of 1:1 chat)
-  - (Undeveloped) analyze most frequently used keywords
+  - number of emoticons sent by sender.
+  - (Undeveloped) response time (easy to calculate in 1:1 chat room)
+  - (Undeveloped) calculate intimacy between members
+  - analyze most frequently used keywords -> need to improve. so many unimportant keywords.
   
 Things to consider
 --------------
