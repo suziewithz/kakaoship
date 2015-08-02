@@ -1,6 +1,7 @@
 # -*- coding: utf8 -*-
 
 import sys
+from konlpy.tag import Kkma
 
 def increment ( dic, key, value) :
 	if key in dic :
@@ -17,10 +18,11 @@ send_ratio = {}
 msg_bytes = {}
 sent_time = {}
 kcount = {}
-keyword = {}
+keywords = {}
 emoticons = 0
 total = 0
 
+kkma = Kkma()
 
 for i in range(0,24) :
 	sent_time[i] = 0
@@ -45,6 +47,7 @@ for log in logs :
 			# count k in msg.
 			increment(kcount, sender, msg.count(unicode('ㅋ','utf-8')))
 
+			# count emoticons
 			if "(emoticon)" in msg or unicode('(이모티콘)', 'utf-8') in msg:
 				emoticons = emoticons + 1
 
@@ -61,6 +64,11 @@ for log in logs :
 				increment(sent_time, time, 1)
 
 			# analyze keyword
+			keywords_list = kkma.nouns(msg)
+			for keyword in keywords_list :
+				increment(keywords, keyword, 1)
+
+log_file.close()
 
 print "Who sent how much messages? "
 
@@ -82,11 +90,17 @@ for sender in kcount :
 
 print ""
 
+print ""
+
+for keyword in keywords :
+	print keyword + " : " + str(keywords[keyword])
+
+print ""
+
 print "When is the most active moment in this chat room?"
 for time in sorted(sent_time) :
 	print str(sent_time[time]) + " messages were sent at " + str(time) + " o'clock"
 	
-
 print ""
 
 print "you guys used emoticons " + str(emoticons) + " times"
