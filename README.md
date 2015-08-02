@@ -1,4 +1,5 @@
-# kakaoship
+#
+kakaoship
 
 Installation
 --------------
@@ -29,3 +30,4 @@ Things to consider
 --------------
   - Locale(KR/EN/...)
   - Device(Mac/Window/iOS/Android)
+
