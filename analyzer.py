@@ -4,6 +4,14 @@ import sys
 from konlpy.tag import Kkma
 import operator
 
+def td_increment (dic, key1, key2, value) :
+	if key1 not in dic :
+		dic[key1] = {}
+	if key2 not in dic[key1] :
+		dic[key1][key2] = 0
+	
+	dic[key1][key2] = dic[key1][key2] + value
+
 def increment ( dic, key, value) :
 	if key in dic :
 		dic[key] = dic[key] + value
@@ -22,6 +30,10 @@ kcount = {}
 keywords = {}
 emoticons = 0
 total = 0
+last_sender = ""
+
+intimacy = {}
+
 
 kkma = Kkma()
 
@@ -39,6 +51,14 @@ for log in logs :
 			sender = log[start:end]
 			msg = log[end+2:-1].decode('utf-8')
 			
+			# to calculate intimacy between member
+			if len(last_sender) == 0 :
+				last_sender = sender
+			if last_sender != sender :
+				td_increment( intimacy, last_sender, sender, 1)
+				td_increment( intimacy, sender, last_sender, 1)
+				last_sender = sender
+
 			# check send ratio.
 			increment(send_ratio, sender, 1)
 
@@ -65,9 +85,11 @@ for log in logs :
 				increment(sent_time, time, 1)
 
 			# analyze keyword
+			
 			keywords_list = kkma.nouns(msg)
 			for keyword in keywords_list :
 				increment(keywords, keyword, 1)
+			
 
 log_file.close()
 
@@ -93,13 +115,16 @@ print ""
 
 print ""
 
+
 # sorted keywords has 'list' type. not dict.
+print "Top 20 most frequently used keywords in your chatroom."
 sorted_keywords = sorted(keywords.items(), key=lambda x:x[1], reverse = True)
 
 for i in range(0,20) :
 	print sorted_keywords[i][0] + " : " + str(sorted_keywords[i][1])
 
 print ""
+
 
 print "When is the most active moment in this chat room?"
 for time in sorted(sent_time) :
@@ -110,5 +135,15 @@ print ""
 print "you guys used emoticons " + str(emoticons) + " times"
 
 print ""
+
+print "intimacy between members"
+
+for member in intimacy :
+	print member + " : "
+	for friends in intimacy[member] :
+		print " - " + friends + " " + str(intimacy[member][friends])
+
+print ""
+
 print "totally, " + str(total) + " messages were sent"
 
