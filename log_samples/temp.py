@@ -24,7 +24,7 @@ def normalize( log_file ) :
 				msg = Msg() 
 				msg.datetime = datetime.strptime(log.split(",")[0], '%Y-%m-%d %H:%M:%S')
 				msg.sender = log.split(",")[1][1:-1]
-				msg.contents = log.split(",")[2][1:-2]
+				msg.contents = log.split(",")[2][1:-2].decode('utf-8')
 				messages.append(msg)
 			except :
 				print log
@@ -40,7 +40,6 @@ def normalize( log_file ) :
 				temp_log = unicode(log,'utf-8')
 				temp_log = temp_log.replace("-", "")
 				message_date = datetime.strptime(temp_log, ' %A, %B %d, %Y ')
-				print message_date
 			except :
 				pass
 			# window kr
@@ -52,7 +51,6 @@ def normalize( log_file ) :
 				temp_log = temp_log.replace("일".decode('utf-8'), "")
 				temp_log = filter(lambda x: x.isdigit() or x.isspace(), temp_log)
 				message_date = datetime.strptime(temp_log,' %Y %m %d  \n')
-				print message_date
 			except:
 				pass
 
@@ -62,7 +60,7 @@ def normalize( log_file ) :
 				msg.sender = log.split("]")[0][1:]
 				message_time = datetime.strptime(log.split("]")[1][2:], "%H:%M %p")
 				msg.datetime = datetime.combine(message_date ,message_time.timetz())
-				msg.contents = log.split("]")[2][1:-1]
+				msg.contents = log.split("]")[2][1:-1].decode('utf-8')
 				messages.append(msg)
 			except :
 				pass
@@ -76,7 +74,7 @@ def normalize( log_file ) :
 				dt = dt.replace("오후".decode('utf-8'), "PM")
 				message_time = datetime.strptime(dt, "%p %H:%M")
 				msg.datetime = datetime.combine(message_date ,message_time.timetz())
-				msg.contents = log.split("]")[2][1:-1]
+				msg.contents = log.split("]")[2][1:-1].decode('utf-8')
 				messages.append(msg)
 			except :
 				pass
@@ -99,7 +97,7 @@ def normalize( log_file ) :
 					dt = dt.replace("오전".decode('utf-8'), "AM")
 					msg.datetime = datetime.strptime(dt, '%Y. %m. %d. %p %I:%M')
 					msg.sender = log.split(",")[1].split(":")[0][1:-1]
-					msg.contents = log.split(",")[1].split(":")[1][1:-1]
+					msg.contents = log.split(",")[1].split(":")[1][1:-1].decode('utf-8')
 					messages.append(msg)
 				except :
 					print log
@@ -112,7 +110,7 @@ def normalize( log_file ) :
 					dt = log.split(",")[0]+log.split(",")[1]+log.split(",")[2]
 					msg.datetime = datetime.strptime(dt, '%b %d %Y %I:%M %p')
 					msg.sender = log.split(",")[3].split(":")[0][1:-1]
-					msg.contents = log.split(",")[3].split(":")[1][1:-1]
+					msg.contents = log.split(",")[3].split(":")[1][1:-1].decode('utf-8')
 					messages.append(msg)
 				except :
 					print log
@@ -138,7 +136,7 @@ def normalize( log_file ) :
 					dt = dt.replace("일".decode('utf-8'), "")
 					msg.datetime = datetime.strptime(dt, '%Y %m %d %p %I:%M')
 					msg.sender = log.split(",")[1].split(":")[0][1:-1]
-					msg.contents = log.split(",")[1].split(":")[1][1:-1]
+					msg.contents = log.split(",")[1].split(":")[1][1:-1].decode('utf-8')
 					messages.append(msg)
 				except :
 					pass
@@ -152,7 +150,7 @@ def normalize( log_file ) :
 					dt = log.split(",")[0] + log.split(",")[1] + log.split(",")[2]
 					msg.datetime = datetime.strptime(dt, '%I:%M%p %B %d %Y')
 					msg.sender = log.split(",")[3].split(":")[0][1:-1]
-					msg.contents = log.split(",")[3].split(":")[1][1:-1]
+					msg.contents = log.split(",")[3].split(":")[1][1:-1].decode('utf-8')
 					messages.append(msg)
 				except :
 					print log
@@ -164,7 +162,7 @@ def main () :
 	log_file = open (sys.argv[1] , 'r')
 	messages = normalize( log_file )
 	for message in messages :
-		print str(message.datetime) + "\t" + message.sender + "\t" + message.contents	
+		print str(message.datetime) + "\t" + message.sender + "\t" + message.contents.encode('utf-8')	
 
 if __name__ == '__main__' :
 	main()
