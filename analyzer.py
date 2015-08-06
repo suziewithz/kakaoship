@@ -172,6 +172,7 @@ def normalize( log_file ) :
 					messages.append(msg)
 				except :
 					# print log
+					pass
 
 	return messages
 
