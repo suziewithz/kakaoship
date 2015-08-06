@@ -2,7 +2,6 @@
 
 import sys
 from konlpy.tag import Kkma
-import operator
 from datetime import datetime
 
 class Msg:
@@ -10,7 +9,6 @@ class Msg:
 		datetime = ""
 		sender = ""
 		contents = ""
-
 
 def td_increment (dic, key1, key2, value) :
 	if key1 not in dic :
@@ -178,6 +176,7 @@ def normalize( log_file ) :
 	return messages
 
 def analyzer( messages ) :
+
 	send_ratio = {}
 	msg_bytes = {}
 	sent_time = {}
@@ -279,23 +278,12 @@ def analyzer( messages ) :
 
 	print "totally, " + str(total) + " messages were sent"
 
-
-
 def main () :
-	log_file = open (sys.argv[1] , 'r')
+	log_file = open(sys.argv[1] , 'r')
 	messages = normalize( log_file )
 	log_file.close()
-	analyzer(messages)
 
-	send_ratio = {}
-	msg_bytes = {}
-	sent_time = {}
-	kcount = {}
-	keywords = {}
-	emoticons = 0
-	total = 0
-	last_sender = ""
-	intimacy = {}
+	analyzer( messages )
 
 	"""
 	for message in messages :
