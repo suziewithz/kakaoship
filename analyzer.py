@@ -173,7 +173,7 @@ def normalize( log_file ) :
 					msg.contents = log.split(",")[3].split(":")[1][1:-1].decode('utf-8')
 					messages.append(msg)
 				except :
-					print log
+					# print log
 
 	return messages
 
@@ -217,7 +217,7 @@ def analyzer( messages ) :
 			emoticons = emoticons + 1
 
 		# calculate active time
-		increment(sent_time, msg.datetime.time().hour(), 1)
+		increment(sent_time, msg.datetime.time().hour, 1)
 
 		# analyze keyword
 		keywords_list = kkma.nouns(msg.contents)
@@ -297,9 +297,10 @@ def main () :
 	last_sender = ""
 	intimacy = {}
 
-
+	"""
 	for message in messages :
 		print str(message.datetime) + "\t" + message.sender + "\t" + message.contents.encode('utf-8')	
+	"""
 
 if __name__ == '__main__' :
 	main()
