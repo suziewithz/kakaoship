@@ -217,7 +217,7 @@ def analyzer( messages ) :
 			emoticons = emoticons + 1
 
 		# calculate active time
-		increment(sent_time, msg.datetime.time().hour, 1)
+		td_increment(sent_time, msg.datetime.weekday() , msg.datetime.time().hour, 1)
 
 		# analyze keyword
 		keywords_list = kkma.nouns(msg.contents)
@@ -264,8 +264,10 @@ def analyzer( messages ) :
 
 
 	print "When is the most active moment in this chat room?"
-	for time in sorted(sent_time) :
-		print str(sent_time[time]) + " messages were sent at " + str(time) + " o'clock"
+	for week in sorted(sent_time) :
+		print week
+		for hour in sent_time[week]:
+			print str(sent_time[week][hour]) + " messages were sent at " + str(hour) + " o'clock"
 		
 	print ""
 
