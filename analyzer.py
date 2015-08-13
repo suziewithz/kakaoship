@@ -204,10 +204,10 @@ def analyzer( messages ) :
 			last_sender = msg.sender
 
 		# check send ratio.
-		td_increment(send_ratio, msg.datetime.date(), msg.sender, 1)
+		td_increment(send_ratio, str(msg.datetime)[:7], msg.sender, 1)
 
 		# calculate msg bytes by sender
-		td_increment(msg_bytes, msg.datetime.date(), msg.sender, len(msg.contents))
+		td_increment(msg_bytes, str(msg.datetime)[:7], msg.sender, len(msg.contents))
 		
 		# count k in msg.
 		increment(kcount, msg.sender, msg.contents.count(unicode('ㅋ','utf-8')))
@@ -222,7 +222,7 @@ def analyzer( messages ) :
 		# analyze keyword
 		keywords_list = kkma.nouns(msg.contents)
 		for keyword in keywords_list :
-			td_increment(keywords, msg.datetime[:7], keyword, 1)
+			td_increment(keywords, str(msg.datetime)[:7], keyword, 1)
 
 
 	print "Who sent how much messages? "
@@ -238,7 +238,7 @@ def analyzer( messages ) :
 	print "Msg bytes : "
 
 	for date in msg_bytes :
-		print "in " + str(Date)
+		print "in " + str(date)
 		for sender in msg_bytes[date] :
 			print str(sender) + " sent " + str(msg_bytes[date][sender]) + " bytes"
 
