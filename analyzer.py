@@ -204,10 +204,10 @@ def analyzer( messages ) :
 			last_sender = msg.sender
 
 		# check send ratio.
-		increment(send_ratio, msg.sender, 1)
+		td_increment(send_ratio, msg.datetime.date(), msg.sender, 1)
 
 		# calculate msg bytes by sender
-		increment(msg_bytes, msg.sender, len(msg.contents))
+		td_increment(msg_bytes, msg.datetime.date(), msg.sender, len(msg.contents))
 		
 		# count k in msg.
 		increment(kcount, msg.sender, msg.contents.count(unicode('ㅋ','utf-8')))
@@ -222,21 +222,25 @@ def analyzer( messages ) :
 		# analyze keyword
 		keywords_list = kkma.nouns(msg.contents)
 		for keyword in keywords_list :
-			increment(keywords, keyword, 1)
+			td_increment(keywords, msg.datetime[:7], keyword, 1)
 
 
 	print "Who sent how much messages? "
 
-	for sender in send_ratio :
-		print str(sender) + " sent " + str(send_ratio[sender]) + " messages"
-		total = total + int(send_ratio[sender])
+	for date in send_ratio :
+		print "in " + str(date)
+		for sender in send_ratio[date] :
+			print str(sender) + " sent " + str(send_ratio[date][sender]) + " messages"
+			total = total + int(send_ratio[date][sender])
 
 	print ""
 
 	print "Msg bytes : "
 
-	for msg in msg_bytes :
-		print str(msg) + " sent " + str(msg_bytes[msg]) + " bytes"
+	for date in msg_bytes :
+		print "in " + str(Date)
+		for sender in msg_bytes[date] :
+			print str(sender) + " sent " + str(msg_bytes[date][sender]) + " bytes"
 
 	print ""
 
@@ -250,10 +254,11 @@ def analyzer( messages ) :
 
 	# sorted keywords has 'list' type. not dict.
 	print "Top 20 most frequently used keywords in your chatroom."
-	sorted_keywords = sorted(keywords.items(), key=lambda x:x[1], reverse = True)
-
-	for i in range(0,20) :
-		print sorted_keywords[i][0] + " : " + str(sorted_keywords[i][1])
+	for date in keywords :
+		print "in " + date
+ 		sorted_keywords = sorted(keywords[date].items(), key=lambda x:x[1], reverse = True)
+		for i in range(0,20) :
+			print sorted_keywords[i][0] + " : " + str(sorted_keywords[i][1])
 
 	print ""
 
