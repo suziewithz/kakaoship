@@ -258,7 +258,10 @@ def analyzer( messages ) :
 		print "in " + date
  		sorted_keywords = sorted(keywords[date].items(), key=lambda x:x[1], reverse = True)
 		for i in range(0,20) :
-			print sorted_keywords[i][0] + " : " + str(sorted_keywords[i][1])
+			try :
+				print sorted_keywords[i][0] + " : " + str(sorted_keywords[i][1])
+			except :
+				pass
 
 	print ""
 
