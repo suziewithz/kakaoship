@@ -1,9 +1,10 @@
-# -*- coding: utf8 -*-
+# coding: utf-8
 
 import sys
 from konlpy.tag import Kkma
 from datetime import datetime
-
+from django.utils.encoding import smart_str, smart_unicode
+from django.http import HttpResponse, HttpResponseRedirect
 class Msg:
         def __init__(self):
                 datetime = ""
@@ -24,6 +25,13 @@ def increment ( dic, key, value) :
         else :
                 dic[key] = value
 
+def is_msg_content ( msg_content ) :
+	#ignore_contents = ['(사진)', '(Photo)', '(photo)', '<Photo>', '<사진>', 'photo', '사진', '(이모티콘)', '(emoticon)', '(Emoticon)']	
+	ignore_contents = ['사진', '이모티콘'] #형태소 분석 돌리고 난 후라서 사진, 이모티콘만 검사하면 됨. 어차피 영어 단어 검사 안함!
+	for ignore_content in ignore_contents :
+		if unicode(ignore_content, 'utf-8') == smart_unicode(msg_content, 'utf-8') :
+			return False
+	return True
 
 def normalize( log_file ) :
 	info = log_file.readline()

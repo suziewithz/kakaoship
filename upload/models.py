@@ -6,6 +6,7 @@ class Chatroom(models.Model):
     uid = models.CharField(max_length=40)
     start_datetime = models.DateTimeField(auto_now=True)
     complete_datetime = models.DateTimeField(auto_now=True)
+    is_one_to_one = models.PositiveIntegerField(default=0)
 
 class FrequencyMessage(models.Model):
     chatroom = models.ForeignKey(Chatroom, default=0)
