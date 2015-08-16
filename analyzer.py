@@ -225,7 +225,8 @@ def analyzer( messages ) :
 		# analyze keyword
 		keywords_list = twitter.nouns(msg.contents)
 		for keyword in keywords_list :
-			td_increment(keywords, str(msg.datetime)[:7], keyword, 1)
+			if len(keyword) > 1:
+				td_increment(keywords, str(msg.datetime)[:7], keyword, 1)
 
 
 	print "Who sent how much messages? "
