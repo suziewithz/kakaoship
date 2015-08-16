@@ -181,8 +181,10 @@ def analyzer( messages ) :
 	send_ratio = {}
 	msg_bytes = {}
 	sent_time = {}
-	for i in range(0,24) :
-		sent_time[i] = 0
+	for i in range (0, 7) :
+		for j in range(0,24) :
+			sent_time[str(i)][str(j)] = 0
+			
 	kcount = {}
 	keywords = {}
 	emoticons = 0
@@ -269,7 +271,7 @@ def analyzer( messages ) :
 	print "When is the most active moment in this chat room?"
 	for week in sorted(sent_time) :
 		print week
-		for hour in sent_time[week]:
+		for hour in sent_time[str(week)]:
 			print str(sent_time[week][hour]) + " messages were sent at " + str(hour) + " o'clock"
 		
 	print ""
