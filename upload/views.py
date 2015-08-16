@@ -11,7 +11,7 @@ from django.views import generic
 from konlpy.tag import Twitter
 from upload.models import * 
 from django.utils import timezone
-from analyzer import Msg, td_increment, increment, normalize
+from analyzer import * 
 from django.utils.encoding import smart_str, smart_unicode
 from django.db.models import F
 import datetime
@@ -99,11 +99,11 @@ def upload(request):
 			
 				# analyze keyword
 				keywords_list = twitter.nouns(msg.contents)
-				
 				for keyword in keywords_list :
 					if len(keyword) > 1:
-						td_increment(keywords_all, str(msg.datetime)[:7], keyword, 1)
-						increment(keywords, keyword, 1)
+						if ( is_msg_content(keyword) ):	
+							td_increment(keywords_all, str(msg.datetime)[:7], keyword, 1)
+							increment(keywords, keyword, 1)
 
 			#insert frequency message & byte	
 			for date in send_ratio :
