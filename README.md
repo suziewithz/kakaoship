@@ -36,5 +36,4 @@ Functions
   
 Things to consider
 --------------
-  - Locale(KR/EN/JP...)
-  - Device(Mac/Window/iOS/Android)
+  - None yet.
