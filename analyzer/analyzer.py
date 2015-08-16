@@ -24,6 +24,14 @@ def increment ( dic, key, value) :
 	else :
 		dic[key] = value
 
+def is_msg_content ( msg_content ) :
+	ignore_contents = ['(사진)', '(Photo)', '(photo)', '<Photo>', '<사진>', 'photo', '사진', '(이모티콘)', '(emoticon)', '(Emoticon)']	
+	for ignore_content in ignore_contents :
+		if unicode(ignore_content, 'utf-8') == unicode(msg_content, 'utf-8') :
+			return False
+	return True
+
+
 def normalize( log_file ) :
 	info = log_file.readline()
 	logs = log_file.readlines()
@@ -228,10 +236,11 @@ def analyzer( messages ) :
 		td_increment(sent_time, msg.datetime.weekday() , msg.datetime.time().hour, 1)
 
 		# analyze keyword
-		keywords_list = twitter.nouns(msg.contents)
-		for keyword in keywords_list :
-			if len(keyword) > 1:
-				td_increment(keywords, str(msg.datetime)[:7], keyword, 1)
+		if ( is_msg_content(msg.contents) ):
+			keywords_list = twitter.nouns(msg.contents)
+			for keyword in keywords_list :
+				if len(keyword) > 1:
+					td_increment(keywords, str(msg.datetime)[:7], keyword, 1)
 
 	# in case of 1:1 chat room
 	if len(sender_list) == 2 :
