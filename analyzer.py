@@ -1,7 +1,7 @@
 # -*- coding: utf8 -*-
 
 import sys
-from konlpy.tag import Kkma
+from konlpy.tag import Twitter
 from datetime import datetime
 
 class Msg:
@@ -191,7 +191,7 @@ def analyzer( messages ) :
 
 	intimacy = {}
 
-	kkma = Kkma()
+	twitter = Twitter()
 
 	for msg in messages :
 		
@@ -220,7 +220,7 @@ def analyzer( messages ) :
 		td_increment(sent_time, msg.datetime.weekday() , msg.datetime.time().hour, 1)
 
 		# analyze keyword
-		keywords_list = kkma.nouns(msg.contents)
+		keywords_list = twitter.nouns(msg.contents)
 		for keyword in keywords_list :
 			td_increment(keywords, str(msg.datetime)[:7], keyword, 1)
 
