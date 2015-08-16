@@ -20,7 +20,7 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin', include(admin.site.urls)),
     url(r'^chart/([-\w]+)', 'chart.views.drawChart'),
-    url(r'^chart', 'chart.views.drawChart'),
+    url(r'^chart', 'upload.views.upload'),
     url(r'^upload', 'upload.views.upload'),
     url(r'', 'upload.views.index'),
 ]
