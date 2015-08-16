@@ -1,5 +1,5 @@
 # coding: utf-8
-
+import os
 from django.shortcuts import render
 from django.template import Context
 from django.template.loader import get_template
@@ -9,10 +9,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views import generic
 from konlpy.tag import Twitter
-from upload.models import FrequencyMessage, FrequencyChars, FrequencyTime, FrequencyWord, Intimacy, Chatroom
+from upload.models import * 
 from django.utils import timezone
 from analyzer import Msg, td_increment, increment, normalize
 from django.utils.encoding import smart_str, smart_unicode
+from django.db.models import F
 import datetime
 import sys
 import operator
@@ -34,20 +35,24 @@ def upload(request):
 				uid = myUid
 			)
 			dataChatroom.save()
+
 			data = Chatroom.objects.get(uid=myUid) 
 			chatroom_id = data.id
 
 			file = request.FILES['file']
-			#filename = file._name
 			filename = myUid		
+			
 			fp = open('%s/%s' % ("data", filename) , 'wb')
 			for chunk in file.chunks():
 				fp.write(chunk)
 			fp.close()
 			log_file = open('%s/%s' % ("data", filename) , 'r')
-			
+						
 			messages = normalize( log_file )
 			log_file.close()
+			
+			#파일 삭제
+			os.remove('%s/%s' % ("data", filename))
 			
 			send_ratio = {}
 			msg_bytes = {}
@@ -56,6 +61,7 @@ def upload(request):
 			hcount = {}
 			ucount = {}
 			keywords = {}
+			keywords_all = {}
 			emoticons = 0
 			total = 0
 			last_sender = ""
@@ -96,8 +102,9 @@ def upload(request):
 				
 				for keyword in keywords_list :
 					if len(keyword) > 1:
-						td_increment(keywords, str(msg.datetime)[:7], keyword, 1)
-		
+						td_increment(keywords_all, str(msg.datetime)[:7], keyword, 1)
+						increment(keywords, keyword, 1)
+
 			#insert frequency message & byte	
 			for date in send_ratio :
 				for sender in send_ratio[date] :
@@ -110,21 +117,34 @@ def upload(request):
                         		)
                         		dataMessage.save()
 			
-			#insert most keywords
-			for date in keywords :
-				sorted_keywords = sorted(keywords[date].items(), key=lambda x:x[1], reverse = True)
-				for i in range(0,len(sorted_keywords)) :
-					#try :
-						word = smart_str(sorted_keywords[i][0])
-						dataWord = FrequencyWord(
-                                			chatroom_id = chatroom_id,
+			#insert all keywords
+			for date in keywords_all :
+				for keyword in keywords_all[date] :
+					word = smart_str(keyword)
+					getWordData = FrequencyWordAll.objects.filter(word=keyword, date=date)
+					if getWordData.exists() :
+						FrequencyWordAll.objects.filter(id=getWordData[0].id).update(count=F('count') + keywords_all[date][keyword])
+					else :
+						dataWordAll = FrequencyWordAll(
 							date = date,
 							word = word,
-							count = int(sorted_keywords[i][1])
+							count = int(keywords_all[date][keyword])
 						)
-						dataWord.save()
-					#except :
-					#	pass
+						dataWordAll.save()
+
+			#insert most keywords 20				
+			sorted_keywords = sorted(keywords.items(), key=lambda x:x[1], reverse = True)
+			for i in range(0,20) :
+				try :
+					word = smart_str(sorted_keywords[i][0])
+					dataWord = FrequencyWord(
+						chatroom_id = chatroom_id,
+						word = word,
+						count = int(sorted_keywords[i][1])
+					)
+					dataWord.save()
+				except :
+					pass
 			
 			#insert moment
 			for week in sent_time :
@@ -170,7 +190,7 @@ def upload(request):
 
                                 dataChar.save()
 
-			Chatroom.objects.filter(uid=myUid).update(complete_datetime=datetime.datetime.now())
+			Chatroom.objects.filter(id=chatroom_id).update(complete_datetime=datetime.datetime.now())
 			return HttpResponse(myUid)
 	return HttpResponse('Failed to Upload File')
 	
