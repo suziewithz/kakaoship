@@ -273,7 +273,7 @@ def analyzer( messages ) :
 	for week in sent_time :
 		print week
 		for hour in sorted(sent_time[week]):
-			print sent_time[week][hour] + " messages were sent at " + hour + " o'clock"
+			print str(sent_time[week][hour]) + " messages were sent at " + str(hour) + " o'clock"
 		
 	print ""
 
