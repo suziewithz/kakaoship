@@ -270,9 +270,9 @@ def analyzer( messages ) :
 
 
 	print "When is the most active moment in this chat room?"
-	for week in sorted(sent_time) :
+	for week in sent_time :
 		print week
-		for hour in sent_time[str(week)]:
+		for hour in sent_time[week]:
 			print str(sent_time[week][hour]) + " messages were sent at " + str(hour) + " o'clock"
 		
 	print ""
