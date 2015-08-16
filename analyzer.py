@@ -182,9 +182,10 @@ def analyzer( messages ) :
 	msg_bytes = {}
 	sent_time = {}
 	for i in range (0, 7) :
+		sent_time[str(i)] = {}
 		for j in range(0,24) :
-			sent_time[str(i)][str(j)] = 0
-			
+			sent_time[str(i)][str(j)] = 0	
+
 	kcount = {}
 	keywords = {}
 	emoticons = 0
