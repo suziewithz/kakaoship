@@ -15,6 +15,7 @@ from analyzer import *
 from django.utils.encoding import smart_str, smart_unicode
 from django.db.models import F
 import datetime
+from datetime import timedelta
 import sys
 import operator
 import uuid
@@ -53,10 +54,16 @@ def upload(request):
 			
 			#파일 삭제
 			os.remove('%s/%s' % ("data", filename))
-			
+
+			sender_list = set()
 			send_ratio = {}
 			msg_bytes = {}
 			sent_time = {}
+			sent_time = {}
+			for i in range (0, 7) :
+				sent_time[ i ] = {}
+				for j in range(0,24) :
+					sent_time[ i ][ j ] = 0	
 			kcount = {}
 			hcount = {}
 			ucount = {}
@@ -64,13 +71,15 @@ def upload(request):
 			keywords_all = {}
 			emoticons = 0
 			total = 0
-			last_sender = ""
-			
+			last_sender = ""			
 			intimacy = {}
-			
+			is_one_to_one = 0
+
 			twitter = Twitter()
 		
 			for msg in messages :
+				sender_list.add(msg.sender)
+
 				# to calculate intimacy between member
 				if len(last_sender) == 0 :
 					last_sender = msg.sender
@@ -104,6 +113,22 @@ def upload(request):
 						if ( is_msg_content(keyword) ):	
 							td_increment(keywords_all, str(msg.datetime)[:7], keyword, 1)
 							increment(keywords, keyword, 1)
+
+			if len(sender_list) == 2 :
+				response_time = {}
+				last_sender = ""
+				last_response_time = timedelta(0)
+
+				for sender in sender_list :
+					response_time[sender] = []
+				for msg in messages :
+					if len(last_sender) == 0 :
+						last_sender = msg.sender
+					if last_sender != msg.sender :
+						last_sender = msg.sender
+						response_time[msg.sender].append(msg.datetime - last_response_time)
+
+					last_response_time = msg.datetime
 
 			#insert frequency message & byte	
 			for date in send_ratio :
@@ -156,6 +181,12 @@ def upload(request):
 						count = int(sent_time[week][hour])
 					)
 					dateTime.save()
+			if len(sender_list) == 2 :
+				is_one_to_one = 1
+				intimacy = {}
+				for sender in response_time : 
+					rt_average = sum(response_time[sender], timedelta()) / len(response_time[sender])
+					td_increment( intimacy, sender, " ", rt_average.total_seconds())
 
 			#insert intimacy
 			for member in intimacy :
@@ -190,7 +221,7 @@ def upload(request):
 
                                 dataChar.save()
 
-			Chatroom.objects.filter(id=chatroom_id).update(complete_datetime=datetime.datetime.now())
+			Chatroom.objects.filter(id=chatroom_id).update(complete_datetime=datetime.datetime.now(), is_one_to_one=is_one_to_one)
 			return HttpResponse(myUid)
 	return HttpResponse('Failed to Upload File')
 	
