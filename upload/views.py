@@ -1,5 +1,5 @@
 # coding: utf-8
-
+import os
 from django.shortcuts import render
 from django.template import Context
 from django.template.loader import get_template
@@ -34,20 +34,24 @@ def upload(request):
 				uid = myUid
 			)
 			dataChatroom.save()
+
 			data = Chatroom.objects.get(uid=myUid) 
 			chatroom_id = data.id
 
 			file = request.FILES['file']
-			#filename = file._name
 			filename = myUid		
+			
 			fp = open('%s/%s' % ("data", filename) , 'wb')
 			for chunk in file.chunks():
 				fp.write(chunk)
 			fp.close()
 			log_file = open('%s/%s' % ("data", filename) , 'r')
-			
+						
 			messages = normalize( log_file )
 			log_file.close()
+			
+			#파일 삭제
+			os.remove('%s/%s' % ("data", filename))
 			
 			send_ratio = {}
 			msg_bytes = {}
