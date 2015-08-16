@@ -309,8 +309,8 @@ def analyzer( messages ) :
 	if len(sender_list) == 2 : 
 		for sender in response_time : 
 			print sender
-			rt_sum = sum(response_time[sender], timedelta())
-			print "average response time " + str(rt_sum / len(response_time[sender]))
+			rt_average = sum(response_time[sender], timedelta()) / len(response_time[sender])
+			print "responded in " + rt_average + "in average"
 
 	else : 
 		for member in intimacy :
