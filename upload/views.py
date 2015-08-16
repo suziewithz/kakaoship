@@ -9,7 +9,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views import generic
 from konlpy.tag import Twitter
-from upload.models import FrequencyMessage, FrequencyChars, FrequencyTime, FrequencyWord, Intimacy, User
+from upload.models import FrequencyMessage, FrequencyChars, FrequencyTime, FrequencyWord, Intimacy, Chatroom
 from django.utils import timezone
 from analyzer import Msg, td_increment, increment, normalize
 from django.utils.encoding import smart_str, smart_unicode
@@ -30,10 +30,12 @@ def upload(request):
 		if 'file' in request.FILES:
   			myUid = str(uuid.uuid4())
 
-			dataUser = User(
+			dataChatroom = Chatroom(
 				uid = myUid
 			)
-			dataUser.save()
+			dataChatroom.save()
+			data = Chatroom.objects.get(uid=myUid) 
+			chatroom_id = data.id
 
 			file = request.FILES['file']
 			#filename = file._name
@@ -100,11 +102,11 @@ def upload(request):
 			for date in send_ratio :
 				for sender in send_ratio[date] :
                                 	dataMessage = FrequencyMessage(
-                                		uid = myUid,
+                                		chatroom_id = chatroom_id,
 						name = unicode(str(sender), 'utf-8').encode('utf-8'),
                                 		date = date,
                                 		count = int(send_ratio[date][sender]),
-						byte = int(msg_bytes[date][sender])
+						bytes = int(msg_bytes[date][sender])
                         		)
                         		dataMessage.save()
 			
@@ -115,7 +117,7 @@ def upload(request):
 					#try :
 						word = smart_str(sorted_keywords[i][0])
 						dataWord = FrequencyWord(
-							uid = myUid,
+                                			chatroom_id = chatroom_id,
 							date = date,
 							word = word,
 							count = int(sorted_keywords[i][1])
@@ -128,7 +130,7 @@ def upload(request):
 			for week in sent_time :
 				for hour in sent_time[week] :
 					dateTime = FrequencyTime(
-						uid = myUid,
+                                		chatroom_id = chatroom_id,
 						week = int(week),
 						hour = int(hour),
 						count = int(sent_time[week][hour])
@@ -139,7 +141,7 @@ def upload(request):
 			for member in intimacy :
                                 for friends in intimacy[member] :
 					dataIntimacy = Intimacy(
-                                        	uid = myUid,
+                                		chatroom_id = chatroom_id,
 						name = unicode(str(member), 'utf-8').encode('utf-8'),
 						target = unicode(str(friends), 'utf-8').encode('utf-8'),
 						count = int(intimacy[member][friends])
@@ -150,7 +152,7 @@ def upload(request):
 			#insert each char count
 			for sender in kcount :
 				dataChar = FrequencyChars(
-                                        uid = myUid,
+                                	chatroom_id = chatroom_id,
 					name = unicode(str(sender), 'utf-8').encode('utf-8')
                                 )
 				try :
@@ -168,7 +170,7 @@ def upload(request):
 
                                 dataChar.save()
 
-			User.objects.filter(uid=myUid).update(complete_datetime=datetime.datetime.now())
+			Chatroom.objects.filter(uid=myUid).update(complete_datetime=datetime.datetime.now())
 			return HttpResponse(myUid)
 	return HttpResponse('Failed to Upload File')
 	
