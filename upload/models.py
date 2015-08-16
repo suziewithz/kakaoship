@@ -29,11 +29,10 @@ class FrequencyWord(models.Model):
     chatroom = models.ForeignKey(Chatroom, default=0)
     word = models.CharField(max_length=30)
     count = models.IntegerField(default=0)
-    date = models.CharField(max_length=7, default=0)
     def __unicode__(self):
         return unicode(self.word)
 
-class FrequencyWordTotal(models.Model):
+class FrequencyWordAll(models.Model):
     word = models.CharField(max_length=30)
     count = models.IntegerField(default=0)
     date = models.CharField(max_length=7)
