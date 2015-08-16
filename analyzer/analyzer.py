@@ -2,7 +2,7 @@
 
 import sys
 from konlpy.tag import Twitter
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class Msg:
 	def __init__(self):
@@ -178,6 +178,9 @@ def normalize( log_file ) :
 
 def analyzer( messages ) :
 
+	# store senders in chat room
+	sender_list = set()
+
 	send_ratio = {}
 	msg_bytes = {}
 	sent_time = {}
@@ -198,6 +201,8 @@ def analyzer( messages ) :
 
 	for msg in messages :
 		
+		sender_list.add(msg.sender)
+
 		# to calculate intimacy between member
 		if len(last_sender) == 0 :
 			last_sender = msg.sender
@@ -225,7 +230,25 @@ def analyzer( messages ) :
 		# analyze keyword
 		keywords_list = twitter.nouns(msg.contents)
 		for keyword in keywords_list :
-			td_increment(keywords, str(msg.datetime)[:7], keyword, 1)
+			if len(keyword) > 1:
+				td_increment(keywords, str(msg.datetime)[:7], keyword, 1)
+
+	# in case of 1:1 chat room
+	if len(sender_list) == 2 :
+		response_time = {}
+		last_sender = ""
+		last_response_time = timedelta(0)
+
+		for sender in sender_list :
+			response_time[sender] = []
+		for msg in messages :
+			if len(last_sender) == 0 :
+				last_sender = msg.sender
+			if last_sender != msg.sender :
+				last_sender = msg.sender
+				response_time[msg.sender].append(msg.datetime - last_response_time)
+
+			last_response_time = msg.datetime
 
 
 	print "Who sent how much messages? "
@@ -283,10 +306,17 @@ def analyzer( messages ) :
 
 	print "intimacy between members"
 
-	for member in intimacy :
-		print member + " : "
-		for friends in intimacy[member] :
-			print " - " + friends + " " + str(intimacy[member][friends])
+	if len(sender_list) == 2 : 
+		for sender in response_time : 
+			print sender
+			rt_sum = sum(response_time[sender], timedelta())
+			print "average response time " + str(rt_sum / len(response_time[sender]))
+
+	else : 
+		for member in intimacy :
+			print member + " : "
+			for friends in intimacy[member] :
+				print " - " + friends + " " + str(intimacy[member][friends])
 
 	print ""
 
