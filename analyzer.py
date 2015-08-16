@@ -217,7 +217,7 @@ def analyzer( messages ) :
 			emoticons = emoticons + 1
 
 		# calculate active time
-		td_increment(sent_time, msg.datetime.weekday() , msg.datetime.time().hour, 1)
+		td_increment(sent_time, str(msg.datetime.weekday()) , str(msg.datetime.time().hour), 1)
 
 		# analyze keyword
 		keywords_list = twitter.nouns(msg.contents)
