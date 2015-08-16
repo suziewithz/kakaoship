@@ -9,6 +9,8 @@ import datetime
 import MySQLdb
 import collections
 import json
+from django.utils.encoding import smart_str, smart_unicode
+from django.utils.datastructures import SortedDict
 
 # Create your views here.
 def drawChart(request, uid = 'null'):
@@ -25,22 +27,24 @@ def drawChart(request, uid = 'null'):
 	todayMonth = datetime.datetime.now().month
        
 	#메세지 보낸 모든 사람들을의 이름을 구한다. (안보낸 달의 경우 0을 입력해주기 위해. 
-	msg_names = collections.defaultdict()
-	for data in FrequencyMessage.objects.filter(chatroom_id=chatroom_id):
+	msg_names = SortedDict()
+	for data in FrequencyMessage.objects.filter(chatroom_id=chatroom_id).order_by('-count'):
 		msg_names[data.name] = 1
 
 	#frequency message - all month ( ~ 12)
 	object_list = []
-	for i in range(11,-1,-1) :
+	for i in range(0,12) :
 		year, month = month_sub(todayYear, todayMonth, i)
                 year_month = str(year) + "-" + "%02d" % month
-                dic_detail = {}
+                dic_detail = SortedDict()
 		for name in msg_names :
 			dic_detail[name] = 0
-                for data in FrequencyMessage.objects.filter(chatroom_id=chatroom_id,date=year_month).order_by('-count'):
+                for data in FrequencyMessage.objects.filter(chatroom_id=chatroom_id, date=year_month).order_by('-count') :
+			#return HttpResponse(smart_str(data.name) + " / " + str(data.count))
                         dic_detail[data.name] = data.count
 		
 		dic = {}
+		sorted(dic_detail.values())
 		dic['State'] = year_month
 		dic['freq'] = dic_detail
 		object_list.append(dic)
