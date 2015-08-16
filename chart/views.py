@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context
 from django.template.loader import get_template
 from upload.models import FrequencyMessage, FrequencyChars, FrequencyTime, FrequencyWord, Intimacy, Chatroom
@@ -13,7 +13,10 @@ import json
 # Create your views here.
 def drawChart(request, uid = 'null'):
 	#get user data
-	data = Chatroom.objects.get(uid=uid)
+	try : 
+		data = Chatroom.objects.get(uid=uid)
+	except : 
+		return HttpResponseRedirect("/")
 	chatroom_id = data.id
 	startDatetime = data.start_datetime
 	
