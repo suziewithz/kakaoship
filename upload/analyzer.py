@@ -1,28 +1,29 @@
 # -*- coding: utf8 -*-
 
 import sys
-from konlpy.tag import Twitter
+from konlpy.tag import Kkma
 from datetime import datetime
 
 class Msg:
-	def __init__(self):
-		datetime = ""
-		sender = ""
-		contents = ""
+        def __init__(self):
+                datetime = ""
+                sender = ""
+                contents = ""
 
 def td_increment (dic, key1, key2, value) :
-	if key1 not in dic :
-		dic[key1] = {}
-	if key2 not in dic[key1] :
-		dic[key1][key2] = 0
-	
-	dic[key1][key2] = dic[key1][key2] + value
+        if key1 not in dic :
+                dic[key1] = {}
+        if key2 not in dic[key1] :
+                dic[key1][key2] = 0
+
+        dic[key1][key2] = dic[key1][key2] + value
 
 def increment ( dic, key, value) :
-	if key in dic :
-		dic[key] = dic[key] + value
-	else :
-		dic[key] = value
+        if key in dic :
+                dic[key] = dic[key] + value
+        else :
+                dic[key] = value
+
 
 def normalize( log_file ) :
 	info = log_file.readline()
@@ -175,142 +176,3 @@ def normalize( log_file ) :
 					pass
 
 	return messages
-
-def analyzer( messages ) :
-
-	send_ratio = {}
-	msg_bytes = {}
-	sent_time = {}
-	for i in range (0, 7) :
-		sent_time[ i ] = {}
-		for j in range(0,24) :
-			sent_time[ i ][ j ] = 0	
-
-	kcount = {}
-	keywords = {}
-	emoticons = 0
-	total = 0
-	last_sender = ""
-
-	intimacy = {}
-
-	twitter = Twitter()
-
-	for msg in messages :
-		
-		# to calculate intimacy between member
-		if len(last_sender) == 0 :
-			last_sender = msg.sender
-		if last_sender != msg.sender :
-			td_increment( intimacy, last_sender, msg.sender, 1)
-			td_increment( intimacy, msg.sender, last_sender, 1)
-			last_sender = msg.sender
-
-		# check send ratio.
-		td_increment(send_ratio, str(msg.datetime)[:7], msg.sender, 1)
-
-		# calculate msg bytes by sender
-		td_increment(msg_bytes, str(msg.datetime)[:7], msg.sender, len(msg.contents))
-		
-		# count k in msg.
-		increment(kcount, msg.sender, msg.contents.count(unicode('ㅋ','utf-8')))
-
-		# count emoticons
-		if "(emoticon)" in msg.contents or unicode('(이모티콘)', 'utf-8') in msg.contents:
-			emoticons = emoticons + 1
-
-		# calculate active time
-		td_increment(sent_time, msg.datetime.weekday() , msg.datetime.time().hour, 1)
-
-		# analyze keyword
-		keywords_list = twitter.nouns(msg.contents)
-		for keyword in keywords_list :
-			if len(keyword) > 1:
-				td_increment(keywords, str(msg.datetime)[:7], keyword, 1)
-
-
-	print "Who sent how much messages? "
-
-	for date in send_ratio :
-		print "in " + str(date)
-		for sender in send_ratio[date] :
-			print str(sender) + " sent " + str(send_ratio[date][sender]) + " messages"
-			total = total + int(send_ratio[date][sender])
-
-	print ""
-
-	print "Msg bytes : "
-
-	for date in msg_bytes :
-		print "in " + str(date)
-		for sender in msg_bytes[date] :
-			print str(sender) + " sent " + str(msg_bytes[date][sender]) + " bytes"
-
-	print ""
-
-	for sender in kcount :
-		print sender+ " wrote " + unicode('ㅋ','utf-8').encode('utf-8') + " " + str(kcount[sender]) + " byte times"
-
-	print ""
-
-	print ""
-
-
-	# sorted keywords has 'list' type. not dict.
-	print "Top 20 most frequently used keywords in your chatroom."
-	for date in keywords :
-		print "in " + date
- 		sorted_keywords = sorted(keywords[date].items(), key=lambda x:x[1], reverse = True)
-		for i in range(0,20) :
-			try :
-				print sorted_keywords[i][0] + " : " + str(sorted_keywords[i][1])
-			except :
-				pass
-
-	print ""
-
-
-	print "When is the most active moment in this chat room?"
-	for week in sent_time :
-		print week
-		for hour in sorted(sent_time[week]):
-			print sent_time[week][hour] + " messages were sent at " + hour + " o'clock"
-		
-	print ""
-
-	print "you guys used emoticons " + str(emoticons) + " times"
-
-	print ""
-
-	print "intimacy between members"
-
-	for member in intimacy :
-		print member + " : "
-		for friends in intimacy[member] :
-			print " - " + friends + " " + str(intimacy[member][friends])
-
-	print ""
-
-	print "totally, " + str(total) + " messages were sent"
-
-def main () :
-	log_file = open(sys.argv[1] , 'r')
-	messages = normalize( log_file )
-	log_file.close()
-
-	analyzer( messages )
-
-	"""
-	for message in messages :
-		print str(message.datetime) + "\t" + message.sender + "\t" + message.contents.encode('utf-8')	
-	"""
-
-if __name__ == '__main__' :
-	main()
-
-
-			
-
-
-
-
