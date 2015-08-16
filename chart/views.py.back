@@ -1,0 +1,124 @@
+# coding: utf-8
+
+from django.shortcuts import render
+from django.http import HttpResponse
+from django.template import Context
+from django.template.loader import get_template
+from upload.models import FrequencyMessage, FrequencyChars, FrequencyTime, FrequencyWord, Intimacy, User
+import MySQLdb
+import collections
+import json
+
+# Create your views here.
+def drawChart(request, uid = 'null'):
+	conn = MySQLdb.connect (host = "localhost",
+		user = "root", # mysql root
+		passwd = "thak2015!",# mysql root password
+		db = "kakaoship")
+
+	cursor = conn.cursor()
+
+	#frequency message json
+	#cursor.execute ("select * from upload_frequencymessage where uid='" + uid + "' order by date desc")
+	#rows=dictfetchall(cursor)
+	
+	object_list = []
+	for data in FrequencyMessage.objects.filter(uid=uid):
+		d =collections.defaultdict()
+		d['name'] = data.name
+		d['date'] = data.date
+                d['count'] = data.count
+                d['byte'] = data.byte
+                object_list.append(d)
+	"""
+	rows = dictfetchall(FrequencyMessage.objects.filter(uid=uid))	
+	object_list = []
+	for row in rows:
+		d = collections.defaultdict()
+		d['date'] = str(row['date'])
+		d['name'] = row['name']
+		d['count'] = row['count']
+		d['byte'] = row['byte']
+		object_list.append(d)
+	"""
+	jsonFrequencyMessage = json.dumps(object_list)
+
+
+	#frequency word json
+        cursor.execute ("select * from upload_frequencyword where uid='" + uid + "' order by count desc")
+        rows=dictfetchall(cursor)
+
+        object_list = []
+        for row in rows:
+                d = collections.defaultdict()
+                d['word'] = str(row['word'])
+                d['count'] = row['count']
+                object_list.append(d)
+
+        jsonFrequencyWord = json.dumps(object_list)
+
+
+        #frequency time data
+        cursor.execute ("select * from upload_frequencytime where uid='" + uid + "'")
+        rows=dictfetchall(cursor)
+
+        object_list = []
+        for row in rows:
+                d = collections.defaultdict()
+                d['week'] = str(row['week'])
+                d['hour'] = str(row['hour'])
+                d['count'] = str(row['count'])
+                object_list.append(d)
+
+        jsonFrequencyTime = json.dumps(object_list)
+
+
+        #frequency char count
+        cursor.execute ("select * from upload_frequencychars where uid='" + uid + "'")
+        rows=dictfetchall(cursor)
+
+        object_list = []
+        for row in rows:
+                d = collections.defaultdict()
+                d['name'] = str(row['name'])
+                d['count_char_1'] = row['count_char_1']
+                d['count_char_2'] = row['count_char_2']
+                d['count_char_3'] = row['count_char_3']
+		object_list.append(d)
+
+        jsonFrequencyChars = json.dumps(object_list)
+
+
+        # intimacy json
+        cursor.execute ("select * from upload_intimacy where uid='" + uid + "'")
+        rows=dictfetchall(cursor)
+
+        object_list = []
+        for row in rows:
+                d = collections.defaultdict()
+                d['name'] = str(row['name'])
+                d['target'] = row['target']
+                d['count'] = row['count']
+                object_list.append(d)
+
+        jsonIntimacy = json.dumps(object_list)
+
+
+	conn.close() 
+
+	t = get_template('chart.html')
+	html = t.render({
+			'uid':uid, 
+			'jsonFrequencyMessage':jsonFrequencyMessage,
+			'jsonFrequencyTime':jsonFrequencyTime,
+			'jsonFrequencyWord':jsonFrequencyWord,
+			'jsonFrequencyChars':jsonFrequencyChars,
+			'jsonIntimacy':jsonIntimacy}, request)
+	return HttpResponse(html)
+
+def dictfetchall(cursor):
+	desc = cursor.description
+	return [
+		dict(zip([col[0] for col in desc], row))
+		for row in cursor.fetchall()
+	]
