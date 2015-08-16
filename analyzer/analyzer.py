@@ -271,7 +271,7 @@ def analyzer( messages ) :
 	print ""
 
 	for sender in kcount :
-		print sender+ " wrote " + unicode('ㅋ','utf-8').encode('utf-8') + " " + str(kcount[sender]) + " byte times"
+		print sender + " wrote " + unicode('ㅋ','utf-8').encode('utf-8') + " " + str(kcount[sender]) + " byte times"
 
 	print ""
 
@@ -310,7 +310,7 @@ def analyzer( messages ) :
 		for sender in response_time : 
 			print sender
 			rt_average = sum(response_time[sender], timedelta()) / len(response_time[sender])
-			print "responded in " + rt_average + "in average"
+			print "responded in " + str(rt_average) + "in average"
 
 	else : 
 		for member in intimacy :
