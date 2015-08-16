@@ -182,9 +182,9 @@ def analyzer( messages ) :
 	msg_bytes = {}
 	sent_time = {}
 	for i in range (0, 7) :
-		sent_time[str(i)] = {}
+		sent_time[ i ] = {}
 		for j in range(0,24) :
-			sent_time[str(i)][str(j)] = 0	
+			sent_time[ i ][ j ] = 0	
 
 	kcount = {}
 	keywords = {}
@@ -220,7 +220,7 @@ def analyzer( messages ) :
 			emoticons = emoticons + 1
 
 		# calculate active time
-		td_increment(sent_time, str(msg.datetime.weekday()) , str(msg.datetime.time().hour), 1)
+		td_increment(sent_time, msg.datetime.weekday() , msg.datetime.time().hour, 1)
 
 		# analyze keyword
 		keywords_list = twitter.nouns(msg.contents)
@@ -272,8 +272,8 @@ def analyzer( messages ) :
 	print "When is the most active moment in this chat room?"
 	for week in sent_time :
 		print week
-		for hour in sent_time[week]:
-			print str(sent_time[week][hour]) + " messages were sent at " + str(hour) + " o'clock"
+		for hour in sorted(sent_time[week]):
+			print sent_time[week][hour] + " messages were sent at " + hour + " o'clock"
 		
 	print ""
 
