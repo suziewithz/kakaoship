@@ -14,7 +14,8 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+# STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -25,7 +26,7 @@ SECRET_KEY = 'ow_+!4=!z-rikl$ovhn1qw9i^a93b(5!5l+#$y8z-id4^c$0g@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["14.63.175.22"]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -88,9 +89,9 @@ DATABASES = {
 	'ENGINE': 'django.db.backends.mysql',
 	'NAME': 'kakaoship',
 	'USER': 'root',
-	'PASSWORD': 'thak2015!',
+	'PASSWORD': '1234',
    	'HOST':'localhost',
-	'PORT':'3306',
+	'PORT':'3307',
      }
 }
 DATABASE_OPTIONS = {'charset': 'utf8'}

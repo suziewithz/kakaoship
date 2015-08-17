@@ -36,9 +36,13 @@
         <script src="{% static 'js/g.dot.js' %}"></script>
         <script src="{% static 'js/timeHeatmap.js' %}"></script>
         <script src="{% static 'js/hierBarChart.js' %}"></script>
+        <script src="{% static 'js/jquery.zclip.js' %}"></script>
         
      
+
+
      <script>
+
         function responsivefy(svg) {
           // get container + svg aspect ratio
             var container = d3.select(svg.node().parentNode),
@@ -112,27 +116,38 @@
               <div class="row">
                 <div class="col-md-12 spacecontrol">
                   <div style="height: 50px; background-color: #5FA2DD; ">
-                    <button class="btn btn-default search element-vertically" type="submit" style="float:right; margin-right:20px;">링크로 공유하기</button>
+                    <button id="share" class="btn btn-default search element-vertically" type="submit" style="float:right; margin-right:20px;">링크로 공유하기</button>
                   </div>
                 </div>
-              </div>          
+              </div>  
               <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 card nopadding">
-                      <div class="col-xs-3 col-sm-6 col-md-6">
-                        <div id='histoGram'></div>
-                      </div>
-                      <div class="col-xs-3 col-sm-3 col-md-3">
-                        <div id='pieChart' style="padding-top:20%"></div>
-                      </div>
-                      <div class="col-xs-6 col-sm-3 col-md-3">
-                        <div id='legend' style="padding-top:30%"></div>
-                        <!-- <div id='chart'></div> -->
+                <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
+                  <div class="card">
+                    <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
+                      Who sent how much messages?
+                    </p>
+                  <div class="row">
+                    <div class="col-xs-3 col-sm-6 col-md-6">
+                      <div id='histoGram'></div>
+                    </div>
+                    <div class="col-xs-3 col-sm-3 col-md-3">
+                      <div id='pieChart' style="padding-top:20%"></div>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 col-md-3">
+                      <div id='legend' style="padding-top:30%"></div>
+                      <!-- <div id='chart'></div> -->
+                    </div>
                   </div>
                 </div>
               </div>
+              </div>
+                
               <div class="row">
                   <div class="col-xs-4 col-sm-4 col-md-4 spacecontrol">
                       <div class="card">
+                        <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
+                          Frequncy of 'ㅋ'
+                        </p>
                        <div id="donut1"></div>
                        <!-- donut1 modal -->
                        <a data-toggle="modal" data-target="#dount1Modal" style="position:absolute;top:15px;right:20px;cursor:pointer;">상세보기</a>
@@ -157,6 +172,9 @@
                   </div>
                   <div class="col-xs-4 col-sm-4 col-md-4 spacecontrol">
                       <div class="card">
+                        <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
+                          Frequncy of 'ㅎ' 
+                        </p>
                        <div id="donut2"></div>
                        <a data-toggle="modal" data-target="#dount2Modal" style="position:absolute;top:15px;right:20px;cursor:pointer;">상세보기</a>
                         <div class="modal fade" id="dount2Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -180,6 +198,10 @@
                   </div>
                   <div  class="col-xs-4 col-sm-4 col-md-4 spacecontrol">
                       <div class="card">
+                        <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
+                          Frequncy of 'ㅠ'
+                        </p>
+
                        <div id="donut3"></div>
                        <a data-toggle="modal" data-target="#dount3Modal" style="position:absolute;top:15px;right:20px;cursor:pointer;">상세보기</a>
                         <div class="modal fade" id="dount3Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -205,6 +227,9 @@
               <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
+                    <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
+                        Intimacy between members
+                    </p>
                     <div id="mainBubble">
                     </div>
                   </div>
@@ -213,6 +238,9 @@
               <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
+                    <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
+                        Who sent how much messages?
+                      </p>
                     <div id="chart"></div>
                   </div>
                </div>
@@ -220,6 +248,9 @@
               <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
+                    <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
+                      Top 20 most frequently used keywords in your chatroom
+                    </p>
                     <div id="barChart"></div>
                     <div style="position:absolute;top:15px;right:20px;">
                       <div><a>상세보기</a></div>
