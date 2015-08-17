@@ -22,6 +22,10 @@ h3{
 	padding: 0 0 0 10px;
 	margin: 0;
 }
+#file {
+	display: none;
+}
+
 .bg-gray {
   background-color: #eef2f5;
   border-bottom: 1px solid #e9e9e9;
@@ -107,7 +111,12 @@ footer p{
   position: relative;
   margin: 50px auto 0;
 }
-
+.btn-wrapper{
+	position: absolute;
+	width: 320px;
+	height: 320px;
+	z-index: 10;
+}
 .txt-ing-wrapper {
   content: "";
   position: absolute;
@@ -118,7 +127,7 @@ footer p{
   height: 320px;
   background: #fff;
   text-align: center;
-  display: table;
+  display: block;
 }
 .txt-ing{
 	display: none;
