@@ -1,7 +1,4 @@
 data/
 upload/migrations/
 chart/migrations/
-kakaoship/settings.py
-.gitignore
-my_uwsgi.ini
 *.pyc
