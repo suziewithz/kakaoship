@@ -209,7 +209,7 @@ function dashboard(histoGramId, pieCharId, legendId, fData){
         var tr = legend.append("tbody").selectAll("tr").data(lD).enter().append("tr");
             
         // create the first column for each segment.
-        tr.append("td").append("svg").attr("width", '16').attr("height", '16').call(dashResponsivefy).append("rect")
+        tr.append("td").append("svg").attr("width", '16').attr("height", '16').append("rect")
             .attr("width", '16').attr("height", '16')
       .attr("fill",function(d){ return segColor(d.type); });
             
