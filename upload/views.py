@@ -13,18 +13,50 @@ from upload.models import *
 from django.utils import timezone
 from analyzer import * 
 from django.utils.encoding import smart_str, smart_unicode
-from django.db.models import F
+from django.db.models import F, Sum, Count
+import collections
 import datetime
 from datetime import timedelta
 import sys
 import operator
 import uuid
+import json
 
 # Create your views here.
 def index(request):
-    t = get_template('index.html')
-    html = t.render(request)
-    return HttpResponse(html)
+	list = []
+	#for data in FrequencyWordAll.objects.annotate(sum_count=Sum('count')).order_by("-sum_count")[0:20] :
+
+	for data in FrequencyWordAll.objects.raw('select sum(count) as sum_count, word, id from upload_frequencywordall group by word order by sum(count) desc limit 0,20'):
+		dic = collections.defaultdict()
+		dic['word'] = data.word
+		dic['value'] = str(data.sum_count)
+		list.append(dic)
+	jsonMostWordAll = json.dumps(list)
+
+	#last month
+	todayYear = datetime.datetime.now().year
+        todayMonth = datetime.datetime.now().month
+	jsonMostWordMonthly = []
+	for i in range(0,3) :
+		year, month = month_sub(todayYear, todayMonth, i)   
+		year_month = str(year) + "-" + "%02d" % month
+		list = []
+		for data in FrequencyWordAll.objects.filter(date=year_month).order_by('-count')[0:20] :    
+                	dic = collections.defaultdict()
+                	dic['word'] = data.word
+                	dic['value'] = str(data.count)
+                	list.append(dic)
+        	jsonMostWordMonthly.append(json.dumps(list))
+
+	t = get_template('index.html')
+	html = t.render({
+		'jsonMostWordAll':jsonMostWordAll,
+		'jsonMostWordMonthly_1ago':jsonMostWordMonthly[0],
+		'jsonMostWordMonthly_2ago':jsonMostWordMonthly[1],
+		'jsonMostWordMonthly_3ago':jsonMostWordMonthly[2]
+	}, request)
+	return HttpResponse(html)
 
 @csrf_exempt
 def upload(request):
@@ -241,3 +273,14 @@ def increment ( dic, key, value) :
     dic[key] = dic[key] + value
   else :
     dic[key] = value
+
+def month_sub(year, month, sub_month):
+    result_month = 0
+    result_year = 0
+    if month > (sub_month % 12):
+        result_month = month - (sub_month % 12)
+        result_year = year - (sub_month / 12)
+    else:
+        result_month = 12 - (sub_month % 12) + month
+        result_year = year - (sub_month / 12 + 1)
+    return (result_year, result_month)
