@@ -1,4 +1,5 @@
 data/
 upload/migrations/
 chart/migrations/
+kakaoship/settings.py
 *.pyc
