@@ -13,18 +13,34 @@ from upload.models import *
 from django.utils import timezone
 from analyzer import * 
 from django.utils.encoding import smart_str, smart_unicode
-from django.db.models import F
+from django.db.models import F, Sum, Count
+import collections
 import datetime
 from datetime import timedelta
 import sys
 import operator
 import uuid
+import json
 
 # Create your views here.
 def index(request):
-    t = get_template('index.html')
-    html = t.render(request)
-    return HttpResponse(html)
+	list = []
+	#for data in FrequencyWordAll.objects.all().annotate(dc=Count('word')).values('dc').order_by('-count')[:20] :
+	for data in FrequencyWordAll.objects.exclude(word__exact='').exclude(word__isnull=True).values('word').annotate(sum_count=Sum('count'))
+		dic = collections.defaultdict()
+		dic['word'] = data.word
+		#dic['sum_count'] = data.sum_count
+		dic['count'] = data.count
+		dic['dc'] = data.dc
+		list.append(dic)
+
+	jsonMostWordAll = json.dumps(list)
+    
+	t = get_template('index.html')
+	html = t.render({
+		'jsonMostWordAll':jsonMostWordAll
+	}, request)
+	return HttpResponse(html)
 
 @csrf_exempt
 def upload(request):
