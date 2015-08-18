@@ -728,9 +728,9 @@
 		          }
               var createDashChart = false;
               $('#dashModal').on('shown.bs.modal', function (event) {
-                if(!createChart){
+                if(!createDashChart){
                   createHierBarChart(hierBarChartData);
-                  createChart = true;
+                  createDashChart = true;
                 }
               });
 
