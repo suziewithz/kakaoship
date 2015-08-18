@@ -185,14 +185,18 @@
                        <!-- donut1 modal -->
                        <a data-toggle="modal" data-target="#dount1Modal" style="position:absolute;top:15px;right:20px;cursor:pointer;">상세보기</a>
                         <div class="modal fade" id="dount1Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                          <div class="modal-dialog" role="document">
+                          <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 <h4 class="modal-title" id="myModalLabel">Modal title</h4>
                               </div>
                               <div class="modal-body">
-                                ...
+                                <div class="container-fluid">
+                                  <div class="row">  
+                                      <div id="kkBarChart"></div>
+                                 </div>
+                               </div>
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -211,14 +215,18 @@
                        <div id="donut2"></div>
                        <a data-toggle="modal" data-target="#dount2Modal" style="position:absolute;top:15px;right:20px;cursor:pointer;">상세보기</a>
                         <div class="modal fade" id="dount2Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                          <div class="modal-dialog" role="document">
+                          <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 <h4 class="modal-title" id="myModalLabel">Modal title</h4>
                               </div>
                               <div class="modal-body">
-                                ...
+                                <div class="container-fluid">
+                                  <div class="row">  
+                                      <div id="hhBarChart"></div>
+                                 </div>
+                               </div>
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -238,14 +246,18 @@
                        <div id="donut3"></div>
                        <a data-toggle="modal" data-target="#dount3Modal" style="position:absolute;top:15px;right:20px;cursor:pointer;">상세보기</a>
                         <div class="modal fade" id="dount3Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                          <div class="modal-dialog" role="document">
+                          <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 <h4 class="modal-title" id="myModalLabel">Modal title</h4>
                               </div>
                               <div class="modal-body">
-                                ...
+                                <div class="container-fluid">
+                                  <div class="row">  
+                                      <div id="uuBarChart"></div>
+                                 </div>
+                               </div>
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -726,13 +738,122 @@
 		            }
 		           ]
 		          }
+
+
+
+              kkChartData = {
+               "name": "flare",
+               "children": [
+                 {
+                    "name": "김민기",
+                    "children":[
+                      {"name": "talk", "size": 3000},
+                      {"name": "byte", "size": 2000}
+                    ]
+                  },
+                  {
+                    "name": "강수지",
+                    "children":[
+                      {"name": "talk", "size": 3000},
+                      {"name": "byte", "size": 2000}
+                    ]
+                  },
+                  {
+                    "name": "박영우",
+                    "children":[
+                      {"name": "talk", "size": 3000},
+                      {"name": "byte", "size": 2000}
+                    ]
+                  }
+                ]
+              }
+
+              hhChartData = {
+               "name": "flare",
+               "children": [
+                 {
+                    "name": "김민기",
+                    "children":[
+                      {"name": "talk", "size": 3000},
+                      {"name": "byte", "size": 2000}
+                    ]
+                  },
+                  {
+                    "name": "강수지",
+                    "children":[
+                      {"name": "talk", "size": 3000},
+                      {"name": "byte", "size": 2000}
+                    ]
+                  },
+                  {
+                    "name": "박영",
+                    "children":[
+                      {"name": "talk", "size": 3000},
+                      {"name": "byte", "size": 2000}
+                    ]
+                  }
+                ]
+              }
+
+              uuChartData = {
+               "name": "flare",
+               "children": [
+                 {
+                    "name": "김민기",
+                    "children":[
+                      {"name": "talk", "size": 3000},
+                      {"name": "byte", "size": 2000}
+                    ]
+                  },
+                  {
+                    "name": "강수지",
+                    "children":[
+                      {"name": "talk", "size": 3000},
+                      {"name": "byte", "size": 2000}
+                    ]
+                  },
+                  {
+                    "name": "박영",
+                    "children":[
+                      {"name": "talk", "size": 3000},
+                      {"name": "byte", "size": 2000}
+                    ]
+                  }
+                ]
+              }
+
+
+              
               var createDashChart = false;
               $('#dashModal').on('shown.bs.modal', function (event) {
                 if(!createDashChart){
-                  createHierBarChart(hierBarChartData);
+                  createHierBarChart("#hierBarChart", hierBarChartData);
                   createDashChart = true;
                 }
               });
+
+              var createKKChart = false;
+              $('#dount1Modal').on('shown.bs.modal', function (event) {
+                if(!createKKChart){
+                  createHierBarChart("#kkBarChart", kkChartData);
+                  createKKChart = true;
+                }
+              });
+              var createHHChart = false;
+              $('#dount2Modal').on('shown.bs.modal', function (event) {
+                if(!createHHChart){
+                  createHierBarChart("#hhBarChart", hhChartData);
+                  createHHChart = true;
+                }
+              });
+              var createUUChart = false;
+              $('#dount3Modal').on('shown.bs.modal', function (event) {
+                if(!createUUChart){
+                  createHierBarChart("#uuBarChart", uuChartData);
+                  createUUChart = true;
+                }
+              });
+
 
 		          
 		        // dotChart(data);
