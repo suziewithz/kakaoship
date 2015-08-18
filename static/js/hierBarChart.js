@@ -18,6 +18,7 @@ function createHierBarChart(root){
     var svg = d3.select("#hierBarChart").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
+        .call(responsivefy)
       .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     svg.append("rect")

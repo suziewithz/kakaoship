@@ -36,9 +36,8 @@
 		<section class="container">
 			<div class="holder-wrapper">
 				<div id="holder" class="circle" data-percent="0">
-					<div class="txt" id="upload-button">
-						Click or Drag&Drop<br>
-						<input type="file" name="file" id="file">			
+					<div class="txt">
+						Click or Drag&Drop							
 					</div>
 					<div class="txt-ing-wrapper">
 						<div class="txt-ing">
@@ -46,9 +45,12 @@
 							<div class="loader"></div>
 						</div>
 					</div>
-					<div class="btn-wrapper"></div>
 				</div>
 			</div>
+			<form action="/upload" method="post"  enctype="multipart/form-data">
+				<input type="file" name="file">
+				<input type="submit" value="123">
+			</form>
 		</section>
 		
 		<footer class="bg-gray">
