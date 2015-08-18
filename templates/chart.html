@@ -275,28 +275,6 @@
                     <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
                         Intimacy between members
                     </p>
-                    <a data-toggle="modal" data-target="#intimacyModal" style="position:absolute;top:15px;right:20px;cursor:pointer;">상세보기</a>
-                    <div class="modal fade" id="intimacyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                      <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-                          </div>
-                          <div class="modal-body">
-                            <div class="container-fluid">
-                              <div class="row">  
-                                  <div id="intimacyChart"></div>
-                             </div>
-                           </div>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                     <div id="mainBubble">
                     </div>
                   </div>
@@ -320,6 +298,7 @@
                     </p>
                     <div id="barChart"></div>
                     <div style="position:absolute;top:15px;right:20px;">
+                      <div><a>상세보기</a></div>
                       <label><input type="checkbox">정렬</label>
                     </div>
                   </div>
@@ -853,14 +832,6 @@
                 }
               });
 
-              var createIntimacyGraph = false;
-              $('#intimacyModal').on('shown.bs.modal', function (event) {
-                if(!createIntimacyGraph){
-                  createHierBarChart("#intimacyChart", kkChartData);
-                  createIntimacyGraph = true;
-                }
-              });
-
               var createKKChart = false;
               $('#dount1Modal').on('shown.bs.modal', function (event) {
                 if(!createKKChart){
@@ -868,7 +839,6 @@
                   createKKChart = true;
                 }
               });
-
               var createHHChart = false;
               $('#dount2Modal').on('shown.bs.modal', function (event) {
                 if(!createHHChart){
