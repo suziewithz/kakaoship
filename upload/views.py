@@ -26,35 +26,39 @@ import json
 def index(request):
 	list = []
 	#for data in FrequencyWordAll.objects.annotate(sum_count=Sum('count')).order_by("-sum_count")[0:20] :
-
-	for data in FrequencyWordAll.objects.raw('select sum(count) as sum_count, word, id from upload_frequencywordall group by word order by sum(count) desc limit 0,20'):
+	cnt = 1
+	for data in FrequencyWordAll.objects.raw('select sum(count) as sum_count, word, id from upload_frequencywordall group by word order by sum(count) desc limit 0,10'):
 		dic = collections.defaultdict()
 		dic['word'] = data.word
 		dic['value'] = str(data.sum_count)
 		list.append(dic)
-	jsonMostWordAll = json.dumps(list)
+		cnt = cnt + 1
+	jsonMostWordAll = list
 
 	#last month
 	todayYear = datetime.datetime.now().year
         todayMonth = datetime.datetime.now().month
 	jsonMostWordMonthly = []
-	for i in range(0,3) :
+	for i in range(0,6) :
 		year, month = month_sub(todayYear, todayMonth, i)   
 		year_month = str(year) + "-" + "%02d" % month
 		list = []
-		for data in FrequencyWordAll.objects.filter(date=year_month).order_by('-count')[0:20] :    
+		for data in FrequencyWordAll.objects.filter(date=year_month).order_by('-count')[0:10] :    
                 	dic = collections.defaultdict()
                 	dic['word'] = data.word
                 	dic['value'] = str(data.count)
                 	list.append(dic)
-        	jsonMostWordMonthly.append(json.dumps(list))
+		result = {}
+		result['month'] = month
+		result['list'] = list
+        	jsonMostWordMonthly.append(result)
 
 	t = get_template('index.html')
 	html = t.render({
 		'jsonMostWordAll':jsonMostWordAll,
-		'jsonMostWordMonthly_1ago':jsonMostWordMonthly[0],
-		'jsonMostWordMonthly_2ago':jsonMostWordMonthly[1],
-		'jsonMostWordMonthly_3ago':jsonMostWordMonthly[2]
+		'todayMonth':todayMonth,
+		'jsonMostWordMonthly':jsonMostWordMonthly,
+		'nowDate':datetime.datetime.now()
 	}, request)
 	return HttpResponse(html)
 

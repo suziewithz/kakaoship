@@ -1,0 +1,63 @@
+@charset "utf-8";
+.ranking{width:670px;margin:0 auto 50px auto;}
+.ranking li{list-style-type: none;}
+.ranking ol{padding:0;margin: 0}
+.section_realtime{
+	width: 320px;
+	float: left;
+}
+.section_monthly{
+	width: 320px;
+	float: right;
+}
+.clear{
+	clear: both;
+}
+.ranking-container {
+    position: relative;
+    padding: 0;
+    background-color: #fff;
+    -webkit-box-shadow: 0 0 3px rgba(0,0,0,.2);
+    -moz-box-shadow: 0 0 3px rgba(0,0,0,.2);
+    box-shadow: 0 0 3px rgba(0,0,0,.2);
+    margin-bottom: 30px;
+}
+.ranking-container .ranking-header {
+    position: relative;
+    padding: 14px 10px;
+    border-bottom: 1px solid #e5e5e5;
+    background-color: #fbfbfb;
+}
+.ranking-container .ranking-item {
+    position: relative;
+    height: 300px;
+    padding: 7px 10px;
+    vertical-align: top;
+    border-bottom: 1px solid #e5e5e5;
+}
+.ranking-container .ranking-item .ranking-item-monthly{
+	padding: 10px;
+}
+.ranking-monthly{
+	display: none;
+}
+
+/* 실시간 */
+.lst_ranking li{margin-top:11px;padding:0 3px 0 3px;}
+.lst_ranking li:first-child{margin-top:0}
+.lst_ranking li em{font-family:tahoma,sans-serif;font-size:11px;font-style:normal}
+.lst_ranking li .num{display:block;float:left;min-width:13px;_width:13px;height:12px;margin-right:9px;border:1px solid #e0e0e0;color:#666;line-height:12px;text-align:center}
+.lst_ranking li .tit{display:block;font-size:12px;color:#000;}
+.lst_ranking li .freq{float: right;display:block;color:#666}
+
+
+.ranking-item-monthly .date{font-size: 11px; color:#aaaaaa;}
+/* 월별 */
+.tab_monthly{overflow:hidden;position:relative;top:-7px;width:300px;margin-bottom:3px;zoom:1}
+.tab_monthly .lst_month{padding-left:1px}
+.tab_monthly .lst_month li{float:left;width:16.6%;font-family:'돋움',dotum,'Apple SD Gothic NEO',helvetica,sans-serif;font-size:11px;text-align:center}
+.tab_monthly .lst_month li:first-child{width:17%}
+.tab_monthly .lst_month li a,.tab_monthly .lst_month li span{display:block;margin-left:-1px;padding:6px 0 3px;border:1px solid #dde1e5;background-color:#f9fafb;color:#a0a3aa;line-height:13px}
+.tab_monthly .lst_month li a{color:#333c4f;text-decoration:none}
+.tab_monthly .lst_month li.selected{position:relative}
+.tab_monthly .lst_month li.selected a{border-color:#babec5;background-color:#fff}
