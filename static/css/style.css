@@ -38,7 +38,14 @@ h3{
   background: -o-linear-gradient(#444F5C, #334159);
   background: linear-gradient(#444F5C, #334159);
 }
-
+.container{
+	padding-top:10px;
+}
+.container .datetime{
+	position: absolute;
+	padding:15px 0 0 20px;
+	color:#fff
+}
 .card{
   background-color: #FFFFFF;
   border: 1px solid #d8d8d8;
