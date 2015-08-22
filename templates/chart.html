@@ -24,7 +24,7 @@
 	    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 	    <!-- js -->
-		<script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
+		    <script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
         <script src="http://d3js.org/d3.v3.min.js"></script>
         <script src="{% static 'js/bootstrap.min.js' %}"></script>
         <script src="{% static 'js/dashboard.js' %}"></script>
@@ -302,7 +302,7 @@
                     <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
                       Top 20 most frequently used keywords
                     </p>
-                    <div id="barChart"></div>
+                    <div id="barChart"></div> 
                     <div style="position:absolute;top:15px;right:20px;">
                       <label><input type="checkbox">정렬</label>
                     </div>
@@ -860,8 +860,7 @@
               });
 
               var oneOnOneData =[
-                {"Question": "Question 1", "1": 24,"2": 294, "N": 3215},
-               
+                {"couple": "couple", "name": ["김민기", "박영우"], "times": [100, 200]}
               ]
 		          
               stackedBarChart(oneOnOneData);
@@ -873,6 +872,5 @@
 		<footer class="bg-gray">
 			<p>2015 © KAKAOSHIP</p>
 			<p>업로드한 데이터는 채팅 분석에만 사용되며 별도로 저장하지 않습니다.</p>
-		</footer>
+    </footer>
 	</body>
-</html>

@@ -1,4 +1,11 @@
+
+
+
 function stackedBarChart(data){
+
+  data.forEach(function(d){
+    d.N = d.times[0] +d.times[1];
+  })
     var margin = {top: 100, right: 20, bottom: 10, left: 20},
         width = 800 - margin.left - margin.right,
         height = 150 - margin.top - margin.bottom;
@@ -10,7 +17,7 @@ function stackedBarChart(data){
         .rangeRound([0, width]);
 
     var color = d3.scale.ordinal()
-        .range(["#c7001e", "#f6a580"]);
+        .range(["#f6a580", "#92c6db"]);
 
     var xAxis = d3.svg.axis()
         .scale(x)
@@ -28,44 +35,44 @@ function stackedBarChart(data){
       .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-      color.domain(["김민기", "박영우"]);
+      color.domain([data[0].name[0], data[0].name[1]]);
 
   data.forEach(function(d) {
     // calc percentages
-    d["김민기"] = +d[1]*100/d.N;
-    d["박영우"] = +d[2]*100/d.N;
+    d[d.name[0]] = +d.times[0]*100/d.N;
+    d[d.name[1]] = +d.times[1]*100/d.N;
 
-    //중
-    var x0 = d["김민기"];
-    console.log(x0);
+    //중간 바
+    var x0 = 0;
+
     var idx = 0;
-    d.boxes = color.domain().map(function(name) { return {name: name, x0: x0, x1: x0 += +d[name], N: +d.N, n: +d[idx += 1]}; });
+    d.boxes = color.domain().map(function(name) { return {name: name, x0: x0, x1: x0 += +d[name], N: +d.N, n: +d.times[idx++]}; });
   });
-
-  console.log(data);
-
+console.log(data);
   var min_val = d3.min(data, function(d) {
-          return d.boxes["0"].x0;
+          return 0;
           });
 
   var max_val = d3.max(data, function(d) {
-          return d.boxes["1"].x1;
+          return 100;
           });
 
   x.domain([min_val, max_val]).nice();
-  y.domain(data.map(function(d) { return d.Question; }));
+  y.domain(data.map(function(d) { return d.couple; }));
 
+
+  var divideLineX = [];
   //x좌표
   svg.append("g")
       .attr("class", "x axis")
       .call(xAxis);
 
  //바 준비
-  var vakken = svg.selectAll(".question")
+  var vakken = svg.selectAll(".couple")
       .data(data)
     .enter().append("g")
       .attr("class", "bar")
-      .attr("transform", function(d) { return "translate(0," + y(d.Question) + ")"; });
+      .attr("transform", function(d) { return "translate(0," + y(d.couple) + ")"; });
 
       //서버바 생성 
   var bars = vakken.selectAll("rect")
@@ -75,8 +82,9 @@ function stackedBarChart(data){
   bars.append("rect")
       .attr("height", y.rangeBand())
       .attr("x", function(d) { return x(d.x0); })
-      .attr("width", function(d) { return x(d.x1) - x(d.x0); })
+      .attr("width", function(d) { divideLineX.push(x(d.x1) - x(d.x0)); return x(d.x1) - x(d.x0); })
       .style("fill", function(d) { return color(d.name); });
+
 
   //바 안의 텍스트
   bars.append("text")
@@ -86,21 +94,24 @@ function stackedBarChart(data){
       .attr("dx", "0.5em")
       .style("font" ,"10px sans-serif")
       .style("text-anchor", "begin")
-      .text(function(d) { return d.n !== 0 && (d.x1-d.x0)>3 ? d.n : "" });
+      .text(function(d) { return d.N !== 0 && (d.x1-d.x0)>3 ? d.n : "" });
 
-  vakken.insert("rect",":first-child")
-      .attr("height", y.rangeBand())
-      .attr("x", "1")
-      .attr("width", width)
-      .attr("fill-opacity", "0.5")
-      .style("fill", "#F5F5F5")
-      .attr("class", function(d,index) { return index%2==0 ? "even" : "uneven"; });
 
+  // vakken.insert("rect",":first-child")
+  //     .attr("height", y.rangeBand())
+  //     .attr("x", "1")
+  //     .attr("width", width)
+  //     .attr("fill-opacity", "0.5")
+  //     .style("fill", "#F5F5F5")
+  //     .attr("class", function(d,index) { return index%2==0 ? "even" : "uneven"; });
+
+ //중간 라
   svg.append("g")
+
       .attr("class", "y axis")
   .append("line")
-      .attr("x1", x(0))
-      .attr("x2", x(0))
+      .attr("x1", function(d, i){ return divideLineX[i]; })
+      .attr("x2", function(d, i){ return divideLineX[i]; })
       .attr("y2", height);
 
   var startp = svg.append("g").attr("class", "legendbox").attr("id", "mylegendbox");
