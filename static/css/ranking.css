@@ -2,6 +2,7 @@
 .ranking{width:670px;margin:0 auto 50px auto;}
 .ranking li{list-style-type: none;}
 .ranking ol{padding:0;margin: 0}
+
 .section_realtime{
 	width: 320px;
 	float: left;
@@ -9,6 +10,19 @@
 .section_monthly{
 	width: 320px;
 	float: right;
+}
+@media (max-width: 670px) {
+	.ranking{width:100%;margin:0 auto 50px auto;}
+	.section_realtime{
+		width: 320px;
+		float: none;
+		margin: 0 auto;
+	}
+	.section_monthly{
+		width: 320px;
+		float: none;
+		margin: 0 auto;
+	}	
 }
 .clear{
 	clear: both;
