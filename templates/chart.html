@@ -133,7 +133,17 @@
               <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
-                    <div id="figure" style="margin-bottom: 50px;"></div>
+                    <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
+                      Who sent how much messages?
+                    </p>
+                    <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                      <div id='test'></div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12  col-md-6">
+                      <div id='figure'></div>
+                    </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -859,11 +869,8 @@
                 }
               });
 
-              var oneOnOneData =[
-                {"couple": "couple", "name": ["김민기", "박영우"], "times": [100, 200]}
-              ]
 		          
-              stackedBarChart(oneOnOneData);
+              oneOnOneBarChart("#test", dashboardData);
 		        // dotChart(data);
 
 			});
