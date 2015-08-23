@@ -105,12 +105,13 @@ def upload(request):
 			ucount = {}
 			keywords = {}
 			keywords_all = {}
+			sent_month = ""
+			temp_keywords = ""
 			emoticons = 0
 			total = 0
 			last_sender = ""			
 			intimacy = {}
 			is_one_to_one = 0
-
 			twitter = Twitter()
 		
 			for msg in messages :
@@ -143,12 +144,36 @@ def upload(request):
 				td_increment(sent_time, msg.datetime.weekday(), msg.datetime.time().hour, 1)
 			
 				# analyze keyword
+				"""
 				keywords_list = twitter.nouns(msg.contents)
 				for keyword in keywords_list :
 					if len(keyword) > 1:
 						if ( is_msg_content(keyword) ):	
 							td_increment(keywords_all, str(msg.datetime)[:7], keyword, 1)
 							increment(keywords, keyword, 1)
+				"""
+				if len(sent_month) == 0 :
+					sent_month = str(msg.datetime)[:7]
+				
+				if sent_month == str(msg.datetime)[:7] :
+					temp_keywords = temp_keywords + " " + msg.contents 
+				elif sent_month != str(msg.datetime)[:7] :
+					keywords_list = twitter.nouns(temp_keywords)
+					for keyword in keywords_list :
+						if len(keyword) > 1:
+							if ( is_msg_content(keyword) ) :
+								td_increment(keywords_all, sent_month, keyword, 1)
+								increment(keywords, keyword, 1)
+					sent_month = str(msg.datetime)[:7]
+					temp_keywords = msg.contents
+
+			#마지막달은 위 for문에서 못 하니까 여기서 한번 더 함.
+			keywords_list = twitter.nouns(temp_keywords)
+			for keyword in keywords_list :
+				if len(keyword) > 1:
+					if ( is_msg_content(keyword) ) :
+						td_increment(keywords_all, sent_month, keyword, 1)
+						increment(keywords, keyword, 1)
 
 			if len(sender_list) == 2 :
 				response_time = {}
@@ -179,9 +204,11 @@ def upload(request):
                         		dataMessage.save()
 			
 			#insert all keywords
+			cnt = 0
 			for date in keywords_all :
 				for keyword in keywords_all[date] :
 					word = smart_str(keyword)
+					cnt = cnt + 1
 					getWordData = FrequencyWordAll.objects.filter(word=keyword, date=date)
 					if getWordData.exists() :
 						FrequencyWordAll.objects.filter(id=getWordData[0].id).update(count=F('count') + keywords_all[date][keyword])
@@ -192,7 +219,7 @@ def upload(request):
 							count = int(keywords_all[date][keyword])
 						)
 						dataWordAll.save()
-
+			
 			#insert most keywords 20				
 			sorted_keywords = sorted(keywords.items(), key=lambda x:x[1], reverse = True)
 			for i in range(0,20) :
@@ -258,7 +285,7 @@ def upload(request):
                                 dataChar.save()
 
 			Chatroom.objects.filter(id=chatroom_id).update(complete_datetime=datetime.datetime.now(), is_one_to_one=is_one_to_one)
-			return HttpResponse(myUid)
+			return HttpResponse(myUid + " . " + str(cnt))
 	return HttpResponse('Failed to Upload File')
 	
 
