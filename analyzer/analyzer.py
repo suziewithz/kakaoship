@@ -24,6 +24,14 @@ def increment ( dic, key, value) :
 	else :
 		dic[key] = value
 
+def is_msg_content ( msg_content ) :
+	ignore_contents = ['(사진)', '(Photo)', '(photo)', '<Photo>', '<사진>', 'photo', '사진', '(이모티콘)', '(emoticon)', '(Emoticon)']	
+	for ignore_content in ignore_contents :
+		if ignore_content.decode('utf-8') == msg_content :
+			return False
+	return True
+
+
 def normalize( log_file ) :
 	info = log_file.readline()
 	logs = log_file.readlines()
@@ -191,9 +199,14 @@ def analyzer( messages ) :
 
 	kcount = {}
 	keywords = {}
+	sent_month = ""
+	temp_keywords = []
+
 	emoticons = 0
 	total = 0
 	last_sender = ""
+
+	
 
 	intimacy = {}
 
@@ -228,10 +241,20 @@ def analyzer( messages ) :
 		td_increment(sent_time, msg.datetime.weekday() , msg.datetime.time().hour, 1)
 
 		# analyze keyword
-		keywords_list = twitter.nouns(msg.contents)
-		for keyword in keywords_list :
-			if len(keyword) > 1:
-				td_increment(keywords, str(msg.datetime)[:7], keyword, 1)
+		if ( is_msg_content(msg.contents) ) :
+			if len(sent_month) == 0 :
+				sent_month = str(msg.datetime)[:7]
+			elif sent_month == str(msg.datetime)[:7] :
+				temp_keywords.append(msg.contents)
+			elif sent_month != str(msg.datetime)[:7] :
+				keywords_list = twitter.nouns(msg.contents)
+				for keyword in keywords_list :
+					if len(keyword) > 1:
+						td_increment(keywords, sent_month, keyword, 1)
+				sent_month = str(msg.datetime)[:7]
+				del temp_keywords[:]
+				temp_keywords.append(msg.contents)
+			
 
 	# in case of 1:1 chat room
 	if len(sender_list) == 2 :
@@ -271,7 +294,7 @@ def analyzer( messages ) :
 	print ""
 
 	for sender in kcount :
-		print sender+ " wrote " + unicode('ㅋ','utf-8').encode('utf-8') + " " + str(kcount[sender]) + " byte times"
+		print sender + " wrote " + unicode('ㅋ','utf-8').encode('utf-8') + " " + str(kcount[sender]) + " byte times"
 
 	print ""
 
@@ -309,8 +332,8 @@ def analyzer( messages ) :
 	if len(sender_list) == 2 : 
 		for sender in response_time : 
 			print sender
-			rt_sum = sum(response_time[sender], timedelta())
-			print "average response time " + str(rt_sum / len(response_time[sender]))
+			rt_average = sum(response_time[sender], timedelta()) / len(response_time[sender])
+			print "responded in " + str(rt_average) + "in average"
 
 	else : 
 		for member in intimacy :
