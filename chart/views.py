@@ -1,42 +1,50 @@
 # coding: utf-8
 
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context
 from django.template.loader import get_template
-from upload.models import FrequencyMessage, FrequencyChars, FrequencyTime, FrequencyWord, Intimacy, User
+from upload.models import FrequencyMessage, FrequencyChars, FrequencyTime, FrequencyWord, Intimacy, Chatroom
 import datetime
 import MySQLdb
 import collections
 import json
+from django.utils.encoding import smart_str, smart_unicode
+from django.utils.datastructures import SortedDict
 
 # Create your views here.
 def drawChart(request, uid = 'null'):
 	#get user data
-	data = User.objects.get(uid=uid)
-	uDatetime = data.datetime
+	try : 
+		data = Chatroom.objects.get(uid=uid)
+	except : 
+		return HttpResponseRedirect("/")
+	chatroom_id = data.id
+	startDatetime = data.start_datetime
 	
 	#frequency message count, byte , valid month
 	todayYear = datetime.datetime.now().year
 	todayMonth = datetime.datetime.now().month
        
 	#메세지 보낸 모든 사람들을의 이름을 구한다. (안보낸 달의 경우 0을 입력해주기 위해. 
-	msg_names = collections.defaultdict()
-	for data in FrequencyMessage.objects.filter(uid=uid):
+	msg_names = SortedDict()
+	for data in FrequencyMessage.objects.filter(chatroom_id=chatroom_id).order_by('-count'):
 		msg_names[data.name] = 1
 
 	#frequency message - all month ( ~ 12)
 	object_list = []
-	for i in range(11,-1,-1) :
+	for i in range(0,12) :
 		year, month = month_sub(todayYear, todayMonth, i)
                 year_month = str(year) + "-" + "%02d" % month
-                dic_detail = {}
+                dic_detail = SortedDict()
 		for name in msg_names :
 			dic_detail[name] = 0
-                for data in FrequencyMessage.objects.filter(uid=uid,date=year_month):
+                for data in FrequencyMessage.objects.filter(chatroom_id=chatroom_id, date=year_month).order_by('-count') :
+			#return HttpResponse(smart_str(data.name) + " / " + str(data.count))
                         dic_detail[data.name] = data.count
 		
 		dic = {}
+		sorted(dic_detail.values())
 		dic['State'] = year_month
 		dic['freq'] = dic_detail
 		object_list.append(dic)
@@ -45,7 +53,7 @@ def drawChart(request, uid = 'null'):
 
 	#frequency each chars 1 - ㅋ
 	object_list = []
-	for data in FrequencyChars.objects.filter(uid=uid).order_by('-count_char_1'):
+	for data in FrequencyChars.objects.filter(chatroom_id=chatroom_id).order_by('-count_char_1'):
 		dic = collections.defaultdict()
 		dic['label'] = data.name
 		dic['value'] = data.count_char_1
@@ -54,7 +62,7 @@ def drawChart(request, uid = 'null'):
 	
 	#frequency each chars 2 - ㅎ
 	object_list = []
-	for data in FrequencyChars.objects.filter(uid=uid).order_by('-count_char_2'):
+	for data in FrequencyChars.objects.filter(chatroom_id=chatroom_id).order_by('-count_char_2'):
 		dic = collections.defaultdict()
 		dic['label'] = data.name
 		dic['value'] = data.count_char_2
@@ -63,7 +71,7 @@ def drawChart(request, uid = 'null'):
 	
 	#frequency each chars 3 - ㅠ
 	object_list = []
-	for data in FrequencyChars.objects.filter(uid=uid).order_by('-count_char_3') :
+	for data in FrequencyChars.objects.filter(chatroom_id=chatroom_id).order_by('-count_char_3') :
 		dic = collections.defaultdict()
 		dic['label'] = data.name
 		dic['value'] = data.count_char_3
@@ -72,7 +80,7 @@ def drawChart(request, uid = 'null'):
 	
 	#frequency words
 	object_list = []
-	for data in FrequencyWord.objects.filter(uid=uid).order_by('-count')[0:20] :
+	for data in FrequencyWord.objects.filter(chatroom_id=chatroom_id).order_by('-count')[0:20] :
 		dic = collections.defaultdict()
 		dic['letter'] = data.word
 		dic['frequency'] = data.count
@@ -81,7 +89,7 @@ def drawChart(request, uid = 'null'):
 	
 	#frequency time
 	object_list = []
-	for data in FrequencyTime.objects.filter(uid=uid):
+	for data in FrequencyTime.objects.filter(chatroom_id=chatroom_id):
 		dic = collections.defaultdict()
 		dic['hour'] = int(data.hour)+1
 		dic['day'] = int(data.week+1)
@@ -91,7 +99,7 @@ def drawChart(request, uid = 'null'):
 	
 	#intimacy
 	dataIntimacy = {}
-	for data in Intimacy.objects.filter(uid=uid):
+	for data in Intimacy.objects.filter(chatroom_id=chatroom_id):
 		td_increment(dataIntimacy, data.name, data.target, data.count)
 	
 	object_list = []
@@ -114,7 +122,7 @@ def drawChart(request, uid = 'null'):
 	t = get_template('chart.html')
 	html = t.render({
 			'uid':uid, 
-			'datetime':uDatetime, 
+			'datetime':startDatetime, 
 			'jsonFrequencyMessage':jsonFrequencyMessage,
 			'jsonFrequencyTime':jsonFrequencyTime,
 			'jsonFrequencyWord':jsonFrequencyWord,

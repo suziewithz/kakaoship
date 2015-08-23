@@ -1,5 +1,5 @@
 
-function createHierBarChart(root){
+function createHierBarChart(id, root){
   var margin = {top: 30, right: 120, bottom: 0, left: 120},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
@@ -15,9 +15,10 @@ function createHierBarChart(root){
     var xAxis = d3.svg.axis()
         .scale(x)
         .orient("top");
-    var svg = d3.select("#hierBarChart").append("svg")
+    var svg = d3.select(id).append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
+        .call(responsivefy)
       .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     svg.append("rect")

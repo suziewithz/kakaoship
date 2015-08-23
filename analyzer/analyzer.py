@@ -254,7 +254,6 @@ def analyzer( messages ) :
 				sent_month = str(msg.datetime)[:7]
 				del temp_keywords[:]
 				temp_keywords.append(msg.contents)
-			
 
 	# in case of 1:1 chat room
 	if len(sender_list) == 2 :

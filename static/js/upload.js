@@ -1,4 +1,4 @@
-function sendFileToServer(formData,status)
+function sendFileToServer(formData)
 {
 	startProgress();
     var uploadURL ="/upload"; //Upload URL
@@ -20,10 +20,10 @@ function sendFileToServer(formData,status)
  
 }
 
-function handleFileUpload(files,obj)
+function handleFileUpload(files)
 {        var fd = new FormData();
         fd.append('file', files);
-        sendFileToServer(fd,status);
+        sendFileToServer(fd);
 }
 $(document).ready(function()
 {
@@ -46,7 +46,7 @@ $(document).ready(function()
 	     var files = e.originalEvent.dataTransfer.files[0];
 	 
 	     //We need to send dropped files to Server
-	     handleFileUpload(files,obj);
+	     handleFileUpload(files);
 	});
 	$(document).on('dragenter', function (e) 
 	{
@@ -63,6 +63,13 @@ $(document).ready(function()
 	{
 	    e.stopPropagation();
 	    e.preventDefault();
+	});
+	
+	$('#file').change(function() {
+		handleFileUpload($('#file')[0].files[0]);
+	});
+	$('.btn-wrapper').click(function() {
+		$("#file").click();
 	});
  
 });

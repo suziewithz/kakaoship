@@ -24,7 +24,7 @@
 	    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 	    <!-- js -->
-		<script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
+		    <script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
         <script src="http://d3js.org/d3.v3.min.js"></script>
         <script src="{% static 'js/bootstrap.min.js' %}"></script>
         <script src="{% static 'js/dashboard.js' %}"></script>
@@ -36,9 +36,23 @@
         <script src="{% static 'js/g.dot.js' %}"></script>
         <script src="{% static 'js/timeHeatmap.js' %}"></script>
         <script src="{% static 'js/hierBarChart.js' %}"></script>
-        
-     
+        <script src="{% static 'js/stackedBarChart.js' %}"></script>
+        <script src="{% static 'js/jquery.zclip.js' %}"></script>
+
      <script>
+       $(document).ready(function() {
+         $("#share").zclip({
+                 path:"{% static 'js/ZeroClipboard.swf' %}",
+                 copy:window.location.href,
+                 afterCopy: function() {
+                    alert('링크가 클립보드에 복사 되었습니다.');
+                  } 
+               });
+       });
+     </script>
+
+     <script>
+
         function responsivefy(svg) {
           // get container + svg aspect ratio
             var container = d3.select(svg.node().parentNode),
@@ -106,45 +120,98 @@
 		</header>
 
 		<section class="container">
-			아이디 : {{uid}} (링크 공유 주소)<Br>
-			실행시간 : {{datetime}} (업로드 한 시간)<Br><br>
             <div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1">
               <div class="row">
                 <div class="col-md-12 spacecontrol">
                   <div style="height: 50px; background-color: #5FA2DD; ">
-                    <button class="btn btn-default search element-vertically" type="submit" style="float:right; margin-right:20px;">링크로 공유하기</button>
-                  </div>
-                </div>
-              </div>          
-              <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 card nopadding">
-                      <div class="col-xs-3 col-sm-6 col-md-6">
-                        <div id='histoGram'></div>
-                      </div>
-                      <div class="col-xs-3 col-sm-3 col-md-3">
-                        <div id='pieChart' style="padding-top:20%"></div>
-                      </div>
-                      <div class="col-xs-6 col-sm-3 col-md-3">
-                        <div id='legend' style="padding-top:30%"></div>
-                        <!-- <div id='chart'></div> -->
+	                  <div class="datetime">분석 시간 : {{datetime}}</div>
+                    <button id="share" class="btn btn-default search element-vertically" type="submit" style="float:right; margin-right:20px;">링크로 공유하기</button>
                   </div>
                 </div>
               </div>
               <div class="row">
-                  <div class="col-xs-4 col-sm-4 col-md-4 spacecontrol">
+                <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
+                  <div class="card">
+                    <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
+                      Who sent how much messages?
+                    </p>
+                    <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                      <div id='test'></div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12  col-md-6">
+                      <div id='figure'></div>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
+                  <div class="card">
+                    <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
+                      Who sent how much messages?
+                    </p>
+                    <a data-toggle="modal" data-target="#dashModal" style="position:absolute;top:15px;right:20px;cursor:pointer;">상세보기</a>
+                    <div class="modal fade" id="dashModal" aria-labelledby="gridSystemModalLabel">
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                          </div>
+                          <div class="modal-body">
+                            <div class="container-fluid">
+                              <div class="row">  
+                                  <div id="hierBarChart"></div>
+                             </div>
+                           </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                     
+                  <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-6">
+                      <div id='histoGram'></div>
+                    </div>
+                    <div class="col-xs-6 col-sm-6  col-md-3">
+                      <div id='pieChart' style="padding-top:20%"></div>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-3 nopadding">
+                      <div id='legend' style="padding-top:30%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </div>
+                
+              <div class="row">
+                  <div class="col-xs-12 col-sm-12 col-md-4 spacecontrol">
                       <div class="card">
+                        <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
+                          Frequncy of 'ㅋ'
+                        </p>
                        <div id="donut1"></div>
                        <!-- donut1 modal -->
                        <a data-toggle="modal" data-target="#dount1Modal" style="position:absolute;top:15px;right:20px;cursor:pointer;">상세보기</a>
                         <div class="modal fade" id="dount1Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                          <div class="modal-dialog" role="document">
+                          <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 <h4 class="modal-title" id="myModalLabel">Modal title</h4>
                               </div>
                               <div class="modal-body">
-                                ...
+                                <div class="container-fluid">
+                                  <div class="row">  
+                                      <div id="kkBarChart"></div>
+                                 </div>
+                               </div>
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -155,19 +222,26 @@
                         </div>
                      </div>
                   </div>
-                  <div class="col-xs-4 col-sm-4 col-md-4 spacecontrol">
+                  <div class="col-xs-12 col-sm-12 col-md-4 spacecontrol">
                       <div class="card">
+                        <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
+                          Frequncy of 'ㅎ' 
+                        </p>
                        <div id="donut2"></div>
                        <a data-toggle="modal" data-target="#dount2Modal" style="position:absolute;top:15px;right:20px;cursor:pointer;">상세보기</a>
                         <div class="modal fade" id="dount2Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                          <div class="modal-dialog" role="document">
+                          <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 <h4 class="modal-title" id="myModalLabel">Modal title</h4>
                               </div>
                               <div class="modal-body">
-                                ...
+                                <div class="container-fluid">
+                                  <div class="row">  
+                                      <div id="hhBarChart"></div>
+                                 </div>
+                               </div>
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -178,19 +252,27 @@
                         </div>
                      </div>
                   </div>
-                  <div  class="col-xs-4 col-sm-4 col-md-4 spacecontrol">
+                  <div  class="col-xs-12 col-sm-12 col-md-4 spacecontrol">
                       <div class="card">
+                        <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
+                          Frequncy of 'ㅠ'
+                        </p>
+
                        <div id="donut3"></div>
                        <a data-toggle="modal" data-target="#dount3Modal" style="position:absolute;top:15px;right:20px;cursor:pointer;">상세보기</a>
                         <div class="modal fade" id="dount3Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                          <div class="modal-dialog" role="document">
+                          <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 <h4 class="modal-title" id="myModalLabel">Modal title</h4>
                               </div>
                               <div class="modal-body">
-                                ...
+                                <div class="container-fluid">
+                                  <div class="row">  
+                                      <div id="uuBarChart"></div>
+                                 </div>
+                               </div>
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -205,6 +287,9 @@
               <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
+                    <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
+                        Intimacy between members
+                    </p>
                     <div id="mainBubble">
                     </div>
                   </div>
@@ -213,6 +298,9 @@
               <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
+                    <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
+                        Who sent how much messages?
+                      </p>
                     <div id="chart"></div>
                   </div>
                </div>
@@ -220,9 +308,11 @@
               <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
-                    <div id="barChart"></div>
+                    <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
+                      Top 20 most frequently used keywords
+                    </p>
+                    <div id="barChart"></div> 
                     <div style="position:absolute;top:15px;right:20px;">
-                      <div><a>상세보기</a></div>
                       <label><input type="checkbox">정렬</label>
                     </div>
                   </div>
@@ -662,7 +752,124 @@
 		            }
 		           ]
 		          }
-		          createHierBarChart(hierBarChartData);
+
+
+
+              kkChartData = {
+               "name": "flare",
+               "children": [
+                 {
+                    "name": "김민기",
+                    "children":[
+                      {"name": "talk", "size": 3000},
+                      {"name": "byte", "size": 2000}
+                    ]
+                  },
+                  {
+                    "name": "강수지",
+                    "children":[
+                      {"name": "talk", "size": 3000},
+                      {"name": "byte", "size": 2000}
+                    ]
+                  },
+                  {
+                    "name": "박영우",
+                    "children":[
+                      {"name": "talk", "size": 3000},
+                      {"name": "byte", "size": 2000}
+                    ]
+                  }
+                ]
+              }
+
+              hhChartData = {
+               "name": "flare",
+               "children": [
+                 {
+                    "name": "김민기",
+                    "children":[
+                      {"name": "talk", "size": 3000},
+                      {"name": "byte", "size": 2000}
+                    ]
+                  },
+                  {
+                    "name": "강수지",
+                    "children":[
+                      {"name": "talk", "size": 3000},
+                      {"name": "byte", "size": 2000}
+                    ]
+                  },
+                  {
+                    "name": "박영",
+                    "children":[
+                      {"name": "talk", "size": 3000},
+                      {"name": "byte", "size": 2000}
+                    ]
+                  }
+                ]
+              }
+
+              uuChartData = {
+               "name": "flare",
+               "children": [
+                 {
+                    "name": "김민기",
+                    "children":[
+                      {"name": "talk", "size": 3000},
+                      {"name": "byte", "size": 2000}
+                    ]
+                  },
+                  {
+                    "name": "강수지",
+                    "children":[
+                      {"name": "talk", "size": 3000},
+                      {"name": "byte", "size": 2000}
+                    ]
+                  },
+                  {
+                    "name": "박영",
+                    "children":[
+                      {"name": "talk", "size": 3000},
+                      {"name": "byte", "size": 2000}
+                    ]
+                  }
+                ]
+              }
+
+
+              
+              var createDashChart = false;
+              $('#dashModal').on('shown.bs.modal', function (event) {
+                if(!createDashChart){
+                  createHierBarChart("#hierBarChart", hierBarChartData);
+                  createDashChart = true;
+                }
+              });
+
+              var createKKChart = false;
+              $('#dount1Modal').on('shown.bs.modal', function (event) {
+                if(!createKKChart){
+                  createHierBarChart("#kkBarChart", kkChartData);
+                  createKKChart = true;
+                }
+              });
+              var createHHChart = false;
+              $('#dount2Modal').on('shown.bs.modal', function (event) {
+                if(!createHHChart){
+                  createHierBarChart("#hhBarChart", hhChartData);
+                  createHHChart = true;
+                }
+              });
+              var createUUChart = false;
+              $('#dount3Modal').on('shown.bs.modal', function (event) {
+                if(!createUUChart){
+                  createHierBarChart("#uuBarChart", uuChartData);
+                  createUUChart = true;
+                }
+              });
+
+		          
+              oneOnOneBarChart("#test", dashboardData);
 		        // dotChart(data);
 
 			});
@@ -671,6 +878,5 @@
 		<footer class="bg-gray">
 			<p>2015 © KAKAOSHIP</p>
 			<p>업로드한 데이터는 채팅 분석에만 사용되며 별도로 저장하지 않습니다.</p>
-		</footer>
+    </footer>
 	</body>
-</html>
