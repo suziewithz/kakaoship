@@ -39,18 +39,6 @@
         <script src="{% static 'js/jquery.zclip.js' %}"></script>
 
      <script>
-       $(document).ready(function() {
-         $("#share").zclip({
-                 path:"{% static 'js/ZeroClipboard.swf' %}",
-                 copy:window.location.href,
-                 afterCopy: function() {
-                    alert('링크가 클립보드에 복사 되었습니다.');
-                  } 
-               });
-       });
-     </script>
-
-     <script>
 
         function responsivefy(svg) {
           // get container + svg aspect ratio
@@ -268,7 +256,31 @@
                      </div>
                   </div>
               </div>
-              <div class="row" id="oneToOne">
+              <div class="row" id="intimacy">
+                <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
+                  <div class="card">
+                    <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
+                      Who sent how much messages?
+                    </p>
+                    <div class="row">
+						<div class="intimacy">
+	                    <div class="intimacy_list">
+		                    <ul id="names">
+			                    
+		                    </ul>
+	                    </div>
+	                    <div id="intimacy_graph" class="intimacy_graph">
+	                    	<div class="hint_graph">
+		                    	이름을 눌러주세요.
+	                    	</div>
+	                    </div>
+	                    <div class="clr"></div>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" id="oneToOne" style="display:none">
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
                     <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
@@ -314,7 +326,9 @@
 		
 		
 
-		<script type="text/javascript">			
+		<script type="text/javascript">		
+	        var arrName = [];
+	        var arrData = [];	
 			$(function(){
 		
 				var dashboardData= {{jsonFrequencyMessage|safe}};
@@ -341,13 +355,23 @@
 					
 					
 					//여기에 1:1 관련 로직.
+				}else{ // 1:1 채팅 아닐 경우 친밀도 로직.
+					$.each(intimacy, function(i, item) {
+						arrName[i] = item.name;
+						arrData[i] = item.children;
+					});	
+					
+					for(i = 0; i < arrName.length; i++){
+						cls = "";
+						if(i % 2 == 0){
+							cls = "class='ibackground'";
+						}
+						$('#names').append("<li onclick=\"drawIntimacy('" + i + "')\" "+ cls +">" + arrName[i] + "</li>");
+					}
 				}
+				
 		        timeData = {{jsonFrequencyTime|safe}};
-		        
-		        var items=[];
-				$.each(intimacy, function(i, item) {
-					$('#names').append("<li>123123</li>");
-				});				
+		        			
 		        dashboard('#histoGram', '#pieChart', '#legend', dashboardData);
 		
 
@@ -436,8 +460,54 @@
 		          var twoUserData = [{"couple":"couple", "name":["김민기", "박영우"], "times":[100, 200]}];
               // oneOnOneBarChart(twoUserData);
 		        // dotChart(data);
+		        
+		         $("#share").zclip({
+	                 path:"{% static 'js/ZeroClipboard.swf' %}",
+	                 copy:window.location.href,
+	                 afterCopy: function() {
+	                    alert('링크가 클립보드에 복사 되었습니다.');
+	                  } 
+	               });
 
 			});
+			function drawIntimacy(n){
+				var str = "";
+				var data = arrData[n];		
+				var limit = 5;
+				var colors = ['8264D6', 'FF5D4F', 'BCD664', 'CC975F', '62BFB3'];
+				str += "<p><span id='i_name'>"+arrName[n]+"</span>님과의 친밀도 순위</p>";
+				str += "<ul id='i_list'>";
+				
+				if(data.length < 5)
+					limit = data.length;
+				if(limit == undefined)
+					limit = 0;
+				
+				if(limit > 0){
+					var len = data.length;
+					for(var i = 0; i < len; i++) {
+						var tmp = data[i];
+						for(var j = i - 1; j >= 0 && (data[j].note < tmp.note); j--) {
+							data[j+1] = data[j];
+						}
+						data[j+1] = tmp;
+					}
+					
+					var max = data[0].note * 1.1;
+					for(var i = 0; i < limit; i++){
+						targetName = data[i].name;
+						targetValue = data[i].note;
+						value = parseInt(targetValue / max * 100);
+						str += "<li class='name'><em>"+ (i+1) +"</em> "+ targetName +"</li>";
+						str += "<li class='chart'><div style='width:"+value+"%; height:29px; color:#fff; font-weight:bold; padding:4px 0 0 10px; background-color: #"+colors[i]+";'>"+targetValue+"</div></li>	";
+					}	
+				}else{
+					str += "<ul><li class='chart'>친밀도를 나타낼 수 있는 친구가 없습니다.</li></ul>";
+				}
+				str += "</ul>";
+				
+				$("#intimacy_graph").html(str);
+			}
 		</script>	
 			
 		<footer class="bg-gray">

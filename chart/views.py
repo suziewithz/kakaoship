@@ -33,7 +33,7 @@ def drawChart(request, uid = 'null'):
 
 	#frequency message - all month ( ~ 12)
 	object_list = []
-	for i in range(0,12) :
+	for i in range(11,-1,-1) :
 		year, month = month_sub(todayYear, todayMonth, i)
                 year_month = str(year) + "-" + "%02d" % month
                 dic_detail = SortedDict()
@@ -117,9 +117,9 @@ def drawChart(request, uid = 'null'):
 	
 	#intimacy
 	dataIntimacy = {}
-	for data in Intimacy.objects.filter(chatroom_id=chatroom_id):
+	for data in Intimacy.objects.filter(chatroom_id=chatroom_id).order_by('-count'):
 		td_increment(dataIntimacy, data.name, data.target, data.count)
-	
+
 	object_list = []
 	for name in dataIntimacy :
 		dic = {}
