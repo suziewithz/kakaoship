@@ -205,6 +205,7 @@ def upload(request):
 			
 			#insert all keywords
 			cnt = 0
+			"""
 			for date in keywords_all :
 				for keyword in keywords_all[date] :
 					word = smart_str(keyword)
@@ -219,7 +220,7 @@ def upload(request):
 							count = int(keywords_all[date][keyword])
 						)
 						dataWordAll.save()
-			
+			"""	
 			#insert most keywords 20				
 			sorted_keywords = sorted(keywords.items(), key=lambda x:x[1], reverse = True)
 			for i in range(0,20) :

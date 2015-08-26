@@ -17,8 +17,8 @@
 	    <!-- css -->
         <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
         <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-        <link rel="stylesheet" href="{% static 'css/bubbleMenu.css' %}">
         <link rel="stylesheet" href="{% static 'css/timeHeatmap.css' %}">
+        <link rel="stylesheet" href="{% static 'css/intimacy.css' %}">
         <link rel="stylesheet" href="{% static 'css/barChart.css' %}">
         <link rel="stylesheet" href="{% static 'css/hierBarChart.css' %}">
 	    <link rel="stylesheet" href="{% static 'css/style.css' %}">
@@ -29,7 +29,6 @@
         <script src="{% static 'js/bootstrap.min.js' %}"></script>
         <script src="{% static 'js/dashboard.js' %}"></script>
         <script src="{% static 'js/barChart.js' %}"></script>
-        <script src="{% static 'js/bubbleMenu.js' %}"></script>
         <script src="http://cdn.oesmith.co.uk/morris-0.4.1.min.js"></script>
         <script src="{% static 'js/raphael-min.js' %}"></script>
         <script src="{% static 'js/g.Raphael.js' %}"></script>
@@ -269,7 +268,7 @@
                      </div>
                   </div>
               </div>
-              <div class="row">
+              <div class="row" id="intimacy">
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
                     <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
@@ -292,7 +291,29 @@
                     <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
                         Intimacy between members
                     </p>
-                    <div id="mainBubble">
+                     
+                    <div class="intimacy">
+	                    <div class="intimacy_list">
+		                    <ul id="names">
+			                    
+		                    </ul>
+	                    </div>
+	                    <div class="intimacy_graph">
+		                    12
+	                    </div>
+	                    <div class="clr"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" id="oneToOne" style="display: none;">
+                <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
+                  <div class="card">
+                    <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
+                        1:1 반응 속도
+                    </p>
+                     
+                    <div>반응속도
                     </div>
                   </div>
                 </div>
@@ -340,14 +361,27 @@
 		        var morrisDonutData3 = {{jsonFrequencyChar3|safe}};
 		
 		        var barChartData = {{jsonFrequencyWord|safe}};
+		        var intimacy = {{jsonIntimacy|safe}};
 		
-		        var bubbleMenuData = {"name":"bubble", "children": {{jsonIntimacy|safe}}};
+				var isOneToOne = {{isOneToOne}}
 		
+				if(isOneToOne){
+					$("#intimacy").css("display","none");
+					$("#oneToOne").css("display","block");
+					
+					var oneToOne = {{jsonIntimacy|safe}}
+					
+					
+					//여기에 1:1 관련 로직.
+				}
 		        timeData = {{jsonFrequencyTime|safe}};
 		        
+		        var items=[];
+				$(intimacy).each(function(index, Element) {
+					$('#names').append("<li>123123</li>");
+				});				
+		        dashboard('#histoGram', '#pieChart', '#legend', dashboardData);
 		
-		         dashboard('#histoGram', '#pieChart', '#legend', dashboardData);
-		          // 
 
             // dashboard('#chart', dashboardData);
 
@@ -367,9 +401,6 @@
 		        });
 		
 		        barChart(barChartData);
-		
-		        bubbleMenu(bubbleMenuData);
-             $("#mainBubble").css("height",$("#mainBubble > svg").attr("height"));
 		
 		        createHeatmap(timeData);
 	
