@@ -50,6 +50,24 @@ def drawChart(request, uid = 'null'):
 		object_list.append(dic)
         jsonFrequencyMessage = json.dumps(object_list)	
 
+        #byte  message - all month ( ~ 12)
+        object_list = []
+        for i in range(0,12) :
+                year, month = month_sub(todayYear, todayMonth, i)
+                year_month = str(year) + "-" + "%02d" % month
+                dic_detail = SortedDict()
+                for name in msg_names :
+                        dic_detail[name] = 0
+                for data in FrequencyMessage.objects.filter(chatroom_id=chatroom_id, date=year_month).order_by('-bytes') :
+                        #return HttpResponse(smart_str(data.name) + " / " + str(data.bytes))
+                        dic_detail[data.name] = data.bytes
+
+                dic = {}
+                sorted(dic_detail.values())
+                dic['State'] = year_month
+                dic['freq'] = dic_detail
+                object_list.append(dic)
+        jsonByteMessage = json.dumps(object_list)
 
 	#frequency each chars 1 - ㅋ
 	object_list = []
@@ -124,6 +142,7 @@ def drawChart(request, uid = 'null'):
 			'uid':uid, 
 			'datetime':startDatetime, 
 			'jsonFrequencyMessage':jsonFrequencyMessage,
+			'jsonByteMessage':jsonByteMessage,
 			'jsonFrequencyTime':jsonFrequencyTime,
 			'jsonFrequencyWord':jsonFrequencyWord,
 			'jsonFrequencyChar1':jsonFrequencyChar1,
