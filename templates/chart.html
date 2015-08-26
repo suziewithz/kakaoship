@@ -272,15 +272,12 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
                     <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
-                      Who sent how much messages?
+                      react time
                     </p>
                     <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-6">
-                      <div id='test'></div>
-                    </div>
-                    <div class="col-xs-12 col-sm-12  col-md-6">
-                      <div id='figure'></div>
-                    </div>
+                      <div class="col-xs-12 col-sm-12 col-md-12" style="margin: 0 0 35px 0; ">
+                        <div id='figure'></div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -382,8 +379,6 @@
             for(var i = 0; i < dashboardData.length; i++){
                  hierBarChartData.children[0].children.push({"name": dashboardData[i].State, "size": dashboardData[i].total, "children":[]})
                  
-                 // console.log(dashboardData[i].freq);
-                // console.log(hierBarChartData.children[0].children);
                  for(var key in dashboardData[i].freq){
                   hierBarChartData.children[0].children[i].children.push({"name":key, "size":dashboardData[i].freq[key]})
                  }
@@ -432,8 +427,7 @@
                 }
               });
 
-		          var twoUserData = [{"couple":"couple", "name":["김민기", "박영우"], "times":[100, 200]}];
-              // oneOnOneBarChart(twoUserData);
+              oneOnOneBarChart("#figure", oneToOne);
 		        // dotChart(data);
 
 			});
