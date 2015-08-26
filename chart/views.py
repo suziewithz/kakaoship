@@ -21,7 +21,7 @@ def drawChart(request, uid = 'null'):
 		return HttpResponseRedirect("/")
 	chatroom_id = data.id
 	startDatetime = data.start_datetime
-	
+	isOneToOne = data.is_one_to_one	
 	#frequency message count, byte , valid month
 	todayYear = datetime.datetime.now().year
 	todayMonth = datetime.datetime.now().month
@@ -129,7 +129,8 @@ def drawChart(request, uid = 'null'):
 			'jsonFrequencyChar1':jsonFrequencyChar1,
 			'jsonFrequencyChar2':jsonFrequencyChar2,
 			'jsonFrequencyChar3':jsonFrequencyChar3,
-			'jsonIntimacy':jsonIntimacy}, request)
+			'jsonIntimacy':jsonIntimacy,
+			'isOneToOne':isOneToOne}, request)
 	return HttpResponse(html)
 
 def td_increment (dic, key1, key2, value) :
