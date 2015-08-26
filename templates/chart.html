@@ -285,24 +285,13 @@
                   </div>
                 </div>
               </div>
-              <div class="row" id="intimacy">
+              <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
                     <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
-                        Intimacy between members
+                        timeheat
                     </p>
-                     
-                    <div class="intimacy">
-	                    <div class="intimacy_list">
-		                    <ul id="names">
-			                    
-		                    </ul>
-	                    </div>
-	                    <div class="intimacy_graph">
-		                    12
-	                    </div>
-	                    <div class="clr"></div>
-                    </div>
+                    <div id="chart"></div>
                   </div>
                 </div>
               </div>
@@ -381,7 +370,6 @@
 		        barChart(barChartData);
 		
 		        createHeatmap(timeData);
-	
 
             hierBarChartData = {"name":"flare", "children":[]};
             kkChartData = {"name":"flare", "children":[]};
@@ -389,10 +377,11 @@
             uuChartData = {"name":"flare", "children":[]};
 
             var total = 0;
+
             hierBarChartData.children.push({"name":"message count","children":[]});
             for(var i = 0; i < dashboardData.length; i++){
                  hierBarChartData.children[0].children.push({"name": dashboardData[i].State, "size": dashboardData[i].total, "children":[]})
-
+                 
                  // console.log(dashboardData[i].freq);
                 // console.log(hierBarChartData.children[0].children);
                  for(var key in dashboardData[i].freq){
