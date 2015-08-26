@@ -1,6 +1,6 @@
 
 function createHierBarChart(id, root){
-  len = root.children.length/20;
+  len = Math.ceil(root.children.length/20);
 
   var margin = {top: 30, right: 120, bottom: 0, left: 120},
     width = 960 - margin.left - margin.right,
