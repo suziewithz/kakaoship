@@ -318,6 +318,7 @@
 			$(function(){
 		
 				var dashboardData= {{jsonFrequencyMessage|safe}};
+				var dataByteMessage = {{jsonByteMessage|safe}};
 
 				//var dashboardData= {{jsonFrequencyMessageAll|safe}};
 				
@@ -344,7 +345,7 @@
 		        timeData = {{jsonFrequencyTime|safe}};
 		        
 		        var items=[];
-				$(intimacy).each(function(index, Element) {
+				$.each(intimacy, function(i, item) {
 					$('#names').append("<li>123123</li>");
 				});				
 		        dashboard('#histoGram', '#pieChart', '#legend', dashboardData);

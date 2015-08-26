@@ -286,7 +286,7 @@ def upload(request):
                                 dataChar.save()
 
 			Chatroom.objects.filter(id=chatroom_id).update(complete_datetime=datetime.datetime.now(), is_one_to_one=is_one_to_one)
-			return HttpResponse(myUid + " . " + str(cnt))
+			return HttpResponse(myUid)
 	return HttpResponse('Failed to Upload File')
 	
 
