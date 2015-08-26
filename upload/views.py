@@ -21,6 +21,7 @@ import sys
 import operator
 import uuid
 import json
+from upload import tasks
 
 # Create your views here.
 def index(request):
@@ -205,9 +206,10 @@ def upload(request):
 			
 			#insert all keywords
 			cnt = 0
-			"""
 			for date in keywords_all :
 				for keyword in keywords_all[date] :
+					tasks.insert_keywords.delay(keyword, date, keywords_all[date][keyword])
+					"""
 					word = smart_str(keyword)
 					cnt = cnt + 1
 					getWordData = FrequencyWordAll.objects.filter(word=keyword, date=date)
@@ -220,7 +222,7 @@ def upload(request):
 							count = int(keywords_all[date][keyword])
 						)
 						dataWordAll.save()
-			"""	
+					"""
 			#insert most keywords 20				
 			sorted_keywords = sorted(keywords.items(), key=lambda x:x[1], reverse = True)
 			for i in range(0,20) :
