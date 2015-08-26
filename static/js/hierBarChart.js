@@ -1,8 +1,10 @@
 
 function createHierBarChart(id, root){
+  len = Math.ceil(root.children.length/20);
+
   var margin = {top: 30, right: 120, bottom: 0, left: 120},
     width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    height = 500*len - margin.top - margin.bottom;
     var x = d3.scale.linear()
         .range([0, width]);
     var barHeight = 20;
