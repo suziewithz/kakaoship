@@ -85,6 +85,8 @@
   .modal .modal-body{
     max-height: 500px;
     overflow-y: auto;
+
+
   }
     
 
@@ -123,7 +125,6 @@
 		<header class="bg-dark">
 			<h1 class="logo">KAKAOSHIP</h1>
 		</header>
-
 		<section class="container">
 			아이디 : {{uid}} (링크 공유 주소)<Br>
 			실행시간 : {{datetime}} (업로드 한 시간)<Br><br>
@@ -131,7 +132,15 @@
               <div class="row">
                 <div class="col-md-12 spacecontrol">
                   <div style="height: 50px; background-color: #5FA2DD; ">
-                    <button id="share" class="btn btn-default search element-vertically" type="submit" style="float:right; margin-right:20px;">링크로 공유하기</button>
+                    <button id="share" class="btn btn-default search element-vertically square2" type="submit" style="float:right; margin-right:20px; background-image:url('{% static 'img/link_logo.png' %}'); background-size: 100% 100%; height:36px; width:36px"></button>
+                    <button class="btn btn-default search element-vertically square1" type="submit" style="float:right; margin-right:10px; background-image: url('{% static 'img/Facebook_logo.png' %}'); background-size: 100% 100%; height:36px; width:36px"
+                      onclick="
+                      window.open(
+                        'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href), 
+                        'facebook-share-dialog', 
+                        'width=626,height=436'); 
+                        return false;">
+                    </button>
                   </div>
                 </div>
               </div>
@@ -268,7 +277,7 @@
                      </div>
                   </div>
               </div>
-              <div class="row" id="oneToOne" style="display:none">
+              <div class="row" id="oneToOne">
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
                     <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
@@ -311,10 +320,14 @@
 		
 		
 
-		<script type="text/javascript">			
+		<script type="text/javascript">
+
 			$(function(){
+
+
 		
 				var dashboardData= {{jsonFrequencyMessage|safe}};
+				var dataByteMessage = {{jsonByteMessage|safe}};
 
 				//var dashboardData= {{jsonFrequencyMessageAll|safe}};
 				
@@ -341,7 +354,7 @@
 		        timeData = {{jsonFrequencyTime|safe}};
 		        
 		        var items=[];
-				$(intimacy).each(function(index, Element) {
+				$.each(intimacy, function(i, item) {
 					$('#names').append("<li>123123</li>");
 				});				
 		        dashboard('#histoGram', '#pieChart', '#legend', dashboardData);
