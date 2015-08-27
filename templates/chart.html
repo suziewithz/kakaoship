@@ -76,7 +76,12 @@
 
 
   }
-    
+  h1 a{
+	color:#fff;
+  }
+  h1 a:hover{
+	color:#fff;
+  } 
 
   @media screen and (max-width: 992px) {
   p,.btn,input,div,span,h4 {
@@ -111,11 +116,9 @@
 
 	<body>
 		<header class="bg-dark">
-			<h1 class="logo">KAKAOSHIP</h1>
+			<h1 class="logo"><a href="/">KAKAOSHIP</a></h1>
 		</header>
 		<section class="container">
-			아이디 : {{uid}} (링크 공유 주소)<Br>
-			실행시간 : {{datetime}} (업로드 한 시간)<Br><br>
             <div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1">
               <div class="row">
                 <div class="col-md-12 spacecontrol">
