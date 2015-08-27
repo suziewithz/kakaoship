@@ -42,6 +42,7 @@
 
      $(document).ready(function(){
         var client = new ZeroClipboard($('#share'));
+
         client.on('ready', function(event) {
             client.on('copy', function(event) {
                 // `this` === `client`
@@ -63,8 +64,8 @@
         });
         
         client.on('error', function(event) {
-            alert("에러! 이 브라우져에서는 링크 복사 기능을 사용할 수 없습니다.")
             ZeroClipboard.destroy();
+            $("#share").remove();
         });
      });
      
@@ -177,7 +178,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
                     <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
-                      Who sent how much messages?
+                      채팅방 구성원들의 메시지 개수를 봅니다.
                     </p>
                     <a data-toggle="modal" data-target="#dashModal" style="position:absolute;top:15px;right:20px;cursor:pointer;">상세보기</a>
                     <div class="modal fade" id="dashModal" aria-labelledby="gridSystemModalLabel">
@@ -219,7 +220,7 @@
                   <div class="col-xs-12 col-sm-12 col-md-4 spacecontrol">
                       <div class="card">
                         <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
-                          Frequncy of 'ㅋ'
+                          'ㅋ' 채팅 랭킹
                         </p>
                        <div id="donut1"></div>
                        <!-- donut1 modal -->
@@ -249,7 +250,7 @@
                   <div class="col-xs-12 col-sm-12 col-md-4 spacecontrol">
                       <div class="card">
                         <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
-                          Frequncy of 'ㅎ' 
+                          'ㅎ' 채팅 랭킹
                         </p>
                        <div id="donut2"></div>
                        <a data-toggle="modal" data-target="#dount2Modal" style="position:absolute;top:15px;right:20px;cursor:pointer;">상세보기</a>
@@ -278,7 +279,7 @@
                   <div  class="col-xs-12 col-sm-12 col-md-4 spacecontrol">
                       <div class="card">
                         <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
-                          Frequncy of 'ㅠ'
+                          'ㅠ' 채팅 랭킹
                         </p>
 
                        <div id="donut3"></div>
@@ -310,7 +311,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
                     <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
-                      Who sent how much messages?
+                      채팅방 구성원들 사이의 친밀도를 확인해 봅니다.
                     </p>
                     <div class="row">
 						<div class="intimacy">
@@ -334,7 +335,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
                     <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
-                      react time
+                      두 사람 사이의 채팅 답장 속도를 봅니다.
                     </p>
                     <div class="row">
                       <div class="col-xs-12 col-sm-12 col-md-12" style="margin: 0 0 35px 0; ">
@@ -348,7 +349,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
                     <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
-                        timeheat
+                        채팅방의 활성화 시간을 확인해 봅니다.
                     </p>
                     <div id="chart"></div>
                   </div>
@@ -358,7 +359,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
                     <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
-                      Top 20 most frequently used keywords
+                      채팅방에서 가장 많이 쓴 키워드 TOP 20을 확인해 봅니다.
                     </p>
                     <div id="barChart"></div> 
                     <div style="position:absolute;top:15px;right:20px;">
@@ -452,12 +453,21 @@
 
             var total = 0;
 
-            hierBarChartData.children.push({"name":"message count","children":[]});
+            hierBarChartData.children.push({"name":"메시지 개수","children":[]});
+            hierBarChartData.children.push({"name":"메시지 바이트","children":[]});
             for(var i = 0; i < dashboardData.length; i++){
                  hierBarChartData.children[0].children.push({"name": dashboardData[i].State, "size": dashboardData[i].total, "children":[]})
                  
                  for(var key in dashboardData[i].freq){
                   hierBarChartData.children[0].children[i].children.push({"name":key, "size":dashboardData[i].freq[key]})
+                 }
+            }
+
+            for(var i = 0; i < dataByteMessage.length; i++){
+                 hierBarChartData.children[1].children.push({"name": dataByteMessage[i].State, "size": dataByteMessage[i].total, "children":[]})
+                 
+                 for(var key in dataByteMessage[i].freq){
+                  hierBarChartData.children[1].children[i].children.push({"name":key, "size":dataByteMessage[i].freq[key]})
                  }
             }
             // console.log(hierBarChartData)
