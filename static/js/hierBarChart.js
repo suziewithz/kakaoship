@@ -41,6 +41,16 @@ function createHierBarChart(id, root){
 
 
   function down(d, i) {
+      len = Math.ceil(d.children.length/20);
+  var margin = {top: 30, right: 120, bottom: 0, left: 120},
+    width = 960 - margin.left - margin.right,
+    height = 500*len - margin.top - margin.bottom;
+
+  var svg = d3.select("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .call(responsivefy)
+
   if (!d.children || this.__transition__) return;
   var end = duration + d.children.length * delay;
   // Mark any currently-displayed bars as exiting.
@@ -92,6 +102,16 @@ function createHierBarChart(id, root){
   d.index = i;
 }
 function up(d) {
+  len = Math.ceil(d.parent.children.length/20);
+  var margin = {top: 30, right: 120, bottom: 0, left: 120},
+    width = 960 - margin.left - margin.right,
+    height = 500*len - margin.top - margin.bottom;
+
+  var svg = d3.select("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .call(responsivefy)
+
   if (!d.parent || this.__transition__) return;
   var end = duration + d.children.length * delay;
   // Mark any currently-displayed bars as exiting.
