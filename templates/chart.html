@@ -36,10 +36,47 @@
         <script src="{% static 'js/timeHeatmap.js' %}"></script>
         <script src="{% static 'js/hierBarChart.js' %}"></script>
         <script src="{% static 'js/stackedBarChart.js' %}"></script>
-        <script src="{% static 'js/jquery.zclip.js' %}"></script>
+        <script src="{% static 'js/ZeroClipboard.js' %}"></script>
 
      <script>
 
+     $(document).ready(function(){
+        var client = new ZeroClipboard($('#share'));
+        client.on('ready', function(event) {
+            client.on('copy', function(event) {
+                // `this` === `client`
+                // `event.target` === the element that was clicked
+
+                // Get the text content of <input> or <textarea> that comes immediately before the clicked button
+                var text = window.location.href;
+
+                // If value of `text` is not empty, set the data to clipboard
+
+                event.clipboardData.setData('text/plain', text);
+                
+            });
+        
+            client.on('aftercopy', function(event) {
+                // Check if copied text is not empty
+                alert('링크가 클립보드에 복사되었습니다.');
+            });
+        });
+        
+        client.on('error', function(event) {
+            alert("에러! 이 브라우져에서는 링크 복사 기능을 사용할 수 없습니다.")
+            ZeroClipboard.destroy();
+        });
+     });
+     
+    
+
+                      // $("#share").zclip({
+                      //    path:"{% static 'js/ZeroClipboard.swf' %}",
+                      //    copy:window.location.href,
+                      //    afterCopy: function() {
+                            
+                      //     } 
+                      //  });
         function responsivefy(svg) {
           // get container + svg aspect ratio
             var container = d3.select(svg.node().parentNode),
@@ -123,8 +160,8 @@
               <div class="row">
                 <div class="col-md-12 spacecontrol">
                   <div style="height: 50px; background-color: #5FA2DD; ">
-                    <button id="share" class="btn btn-default search element-vertically square2" type="submit" style="float:right; margin-right:20px; background-image:url('{% static 'img/link_logo.png' %}'); background-size: 100% 100%; height:36px; width:36px"></button>
-                    <button class="btn btn-default search element-vertically square1" type="submit" style="float:right; margin-right:10px; background-image: url('{% static 'img/Facebook_logo.png' %}'); background-size: 100% 100%; height:36px; width:36px"
+                    <button id="share" data-clipboard-text='Hello World' class="btn btn-default search element-vertically square2" type="submit" style="float:right; margin-right:20px; background-image:url('{% static 'img/link_logo.png' %}'); background-size: 100% 100%; height:36px; width:36px"></button>
+                    <button class="btn btn-default search element-vertically square1" type="submit" style="float:right; margin-right:10px; background-image: url('{% static 'img/Facebook_logo.png' %}'); background-size: 100% 100%; height:36px; width:36px;"
                       onclick="
                       window.open(
                         'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href), 
@@ -132,6 +169,7 @@
                         'width=626,height=436'); 
                         return false;">
                     </button>
+                    
                   </div>
                 </div>
               </div>
@@ -469,13 +507,7 @@
               oneOnOneBarChart("#figure", oneToOne);
 		        // dotChart(data);
 		        
-		         $("#share").zclip({
-	                 path:"{% static 'js/ZeroClipboard.swf' %}",
-	                 copy:window.location.href,
-	                 afterCopy: function() {
-	                    alert('링크가 클립보드에 복사 되었습니다.');
-	                  } 
-	               });
+		        
 
 			});
 			function drawIntimacy(n){
