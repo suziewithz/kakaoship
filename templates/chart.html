@@ -178,7 +178,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
                     <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
-                      채팅방 구성원들의 메시지 개수를 봅니다.
+                      채팅방 구성원들의 총 메시지 개수를 봅니다.
                     </p>
                     <a data-toggle="modal" data-target="#dashModal" style="position:absolute;top:15px;right:20px;cursor:pointer;">상세보기</a>
                     <div class="modal fade" id="dashModal" aria-labelledby="gridSystemModalLabel">
@@ -335,7 +335,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
                     <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
-                      두 사람 사이의 채팅 답장 속도를 봅니다.
+                      두 사람 사이의 평균 답장 속도를 봅니다.
                     </p>
                     <div class="row">
                       <div class="col-xs-12 col-sm-12 col-md-12" style="margin: 0 0 35px 0; ">
@@ -386,14 +386,14 @@
 
 				//var dashboardData= {{jsonFrequencyMessageAll|safe}};
 				
-		        var morrisDonutData1 = {{jsonFrequencyChar1|safe}};
-		
-		        var morrisDonutData2 = {{jsonFrequencyChar2|safe}};
-		
-		        var morrisDonutData3 = {{jsonFrequencyChar3|safe}};
-		
-		        var barChartData = {{jsonFrequencyWord|safe}};
-		        var intimacy = {{jsonIntimacy|safe}};
+        var morrisDonutData1 = {{jsonFrequencyChar1|safe}};
+
+        var morrisDonutData2 = {{jsonFrequencyChar2|safe}};
+
+        var morrisDonutData3 = {{jsonFrequencyChar3|safe}};
+
+        var barChartData = {{jsonFrequencyWord|safe}};
+        var intimacy = {{jsonIntimacy|safe}};
 		
 				var isOneToOne = {{isOneToOne}}
 		
@@ -403,8 +403,8 @@
 					
 					var oneToOne = {{jsonIntimacy|safe}}
 					
-					
-					//여기에 1:1 관련 로직.
+					oneOnOneBarChart("#figure", oneToOne);
+
 				}else{ // 1:1 채팅 아닐 경우 친밀도 로직.
 					$.each(intimacy, function(i, item) {
 						arrName[i] = item.name;
@@ -470,7 +470,6 @@
                   hierBarChartData.children[1].children[i].children.push({"name":key, "size":dataByteMessage[i].freq[key]})
                  }
             }
-            // console.log(hierBarChartData)
 
             for(var i = 0; i < morrisDonutData1.length; i++){
               kkChartData.children.push({"name": morrisDonutData1[i].label, "size": morrisDonutData1[i].value})
@@ -512,12 +511,7 @@
                   createHierBarChart("#uuBarChart", uuChartData);
                   createUUChart = true;
                 }
-              });
-
-              oneOnOneBarChart("#figure", oneToOne);
-		        // dotChart(data);
-		        
-		        
+              });		        
 
 			});
 			function drawIntimacy(n){
@@ -558,6 +552,7 @@
 				
 				$("#intimacy_graph").html(str);
 			}
+
 		</script>	
 			
 		<footer class="bg-gray">

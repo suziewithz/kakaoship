@@ -8,6 +8,7 @@ function oneOnOneBarChart(id, oData){
         data[0].times.push(d.children[0].note);
       })
 
+
       data.forEach(function(d){
         d.N = d.times[0] +d.times[1];
       })
@@ -100,7 +101,7 @@ function oneOnOneBarChart(id, oData){
           .style("font" ,"10px sans-serif")
           .style("text-anchor", "begin")
           .style("float", function(d, i){ return i==0? "left":"right"})
-          .text(function(d) { return d.N !== 0 && (d.x1-d.x0)>3 ? d.n : "" });
+          .text(function(d) { return d.N !== 0 && (d.x1-d.x0)>3 ? timeToHMS(d.n) : "" });
 
      //중간 라
       svg.append("g")
@@ -147,4 +148,11 @@ function oneOnOneBarChart(id, oData){
       d3.selectAll(".legendbox").attr("transform", "translate(" + movesize  + ",0)");
 }
 
+function timeToHMS(seconds){
+  var hour = Math.floor(seconds/(60*60));
+  var minutes = Math.floor(seconds%(60*60)/60);
+  var seconds = Math.floor(seconds%60);
+
+  return hour+"시간 "+minutes+"분 "+seconds+"초";
+}
 
