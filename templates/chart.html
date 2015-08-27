@@ -36,10 +36,48 @@
         <script src="{% static 'js/timeHeatmap.js' %}"></script>
         <script src="{% static 'js/hierBarChart.js' %}"></script>
         <script src="{% static 'js/stackedBarChart.js' %}"></script>
-        <script src="{% static 'js/jquery.zclip.js' %}"></script>
+        <script src="{% static 'js/ZeroClipboard.js' %}"></script>
 
      <script>
 
+     $(document).ready(function(){
+        var client = new ZeroClipboard($('#share'));
+
+        client.on('ready', function(event) {
+            client.on('copy', function(event) {
+                // `this` === `client`
+                // `event.target` === the element that was clicked
+
+                // Get the text content of <input> or <textarea> that comes immediately before the clicked button
+                var text = window.location.href;
+
+                // If value of `text` is not empty, set the data to clipboard
+
+                event.clipboardData.setData('text/plain', text);
+                
+            });
+        
+            client.on('aftercopy', function(event) {
+                // Check if copied text is not empty
+                alert('링크가 클립보드에 복사되었습니다.');
+            });
+        });
+        
+        client.on('error', function(event) {
+            ZeroClipboard.destroy();
+            $("#share").remove();
+        });
+     });
+     
+    
+
+                      // $("#share").zclip({
+                      //    path:"{% static 'js/ZeroClipboard.swf' %}",
+                      //    copy:window.location.href,
+                      //    afterCopy: function() {
+                            
+                      //     } 
+                      //  });
         function responsivefy(svg) {
           // get container + svg aspect ratio
             var container = d3.select(svg.node().parentNode),
@@ -123,8 +161,8 @@
               <div class="row">
                 <div class="col-md-12 spacecontrol">
                   <div style="height: 50px; background-color: #5FA2DD; ">
-                    <button id="share" class="btn btn-default search element-vertically square2" type="submit" style="float:right; margin-right:20px; background-image:url('{% static 'img/link_logo.png' %}'); background-size: 100% 100%; height:36px; width:36px"></button>
-                    <button class="btn btn-default search element-vertically square1" type="submit" style="float:right; margin-right:10px; background-image: url('{% static 'img/Facebook_logo.png' %}'); background-size: 100% 100%; height:36px; width:36px"
+                    <button id="share" data-clipboard-text='Hello World' class="btn btn-default search element-vertically square2" type="submit" style="float:right; margin-right:20px; background-image:url('{% static 'img/link_logo.png' %}'); background-size: 100% 100%; height:36px; width:36px"></button>
+                    <button class="btn btn-default search element-vertically square1" type="submit" style="float:right; margin-right:10px; background-image: url('{% static 'img/Facebook_logo.png' %}'); background-size: 100% 100%; height:36px; width:36px;"
                       onclick="
                       window.open(
                         'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href), 
@@ -132,6 +170,7 @@
                         'width=626,height=436'); 
                         return false;">
                     </button>
+                    
                   </div>
                 </div>
               </div>
@@ -139,7 +178,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
                     <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
-                      Who sent how much messages?
+                      채팅방 구성원들의 총 메시지 개수를 봅니다.
                     </p>
                     <a data-toggle="modal" data-target="#dashModal" style="position:absolute;top:15px;right:20px;cursor:pointer;">상세보기</a>
                     <div class="modal fade" id="dashModal" aria-labelledby="gridSystemModalLabel">
@@ -181,7 +220,7 @@
                   <div class="col-xs-12 col-sm-12 col-md-4 spacecontrol">
                       <div class="card">
                         <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
-                          Frequncy of 'ㅋ'
+                          'ㅋ' 채팅 랭킹
                         </p>
                        <div id="donut1"></div>
                        <!-- donut1 modal -->
@@ -211,7 +250,7 @@
                   <div class="col-xs-12 col-sm-12 col-md-4 spacecontrol">
                       <div class="card">
                         <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
-                          Frequncy of 'ㅎ' 
+                          'ㅎ' 채팅 랭킹
                         </p>
                        <div id="donut2"></div>
                        <a data-toggle="modal" data-target="#dount2Modal" style="position:absolute;top:15px;right:20px;cursor:pointer;">상세보기</a>
@@ -240,7 +279,7 @@
                   <div  class="col-xs-12 col-sm-12 col-md-4 spacecontrol">
                       <div class="card">
                         <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
-                          Frequncy of 'ㅠ'
+                          'ㅠ' 채팅 랭킹
                         </p>
 
                        <div id="donut3"></div>
@@ -272,7 +311,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
                     <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
-                      Who sent how much messages?
+                      채팅방 구성원들 사이의 친밀도를 확인해 봅니다.
                     </p>
                     <div class="row">
 						<div class="intimacy">
@@ -296,7 +335,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
                     <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
-                      react time
+                      두 사람 사이의 평균 답장 속도를 봅니다.
                     </p>
                     <div class="row">
                       <div class="col-xs-12 col-sm-12 col-md-12" style="margin: 0 0 35px 0; ">
@@ -310,7 +349,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
                     <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
-                        timeheat
+                        채팅방의 활성화 시간을 확인해 봅니다.
                     </p>
                     <div id="chart"></div>
                   </div>
@@ -320,7 +359,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 spacecontrol">
                   <div class="card">
                     <p class="row" style="border-bottom:1px solid #eee; padding: 10px 0px 6px 5px; margin: 0 10px 0 10px;">
-                      Top 20 most frequently used keywords
+                      채팅방에서 가장 많이 쓴 키워드 TOP 20을 확인해 봅니다.
                     </p>
                     <div id="barChart"></div> 
                     <div style="position:absolute;top:15px;right:20px;">
@@ -347,14 +386,14 @@
 
 				//var dashboardData= {{jsonFrequencyMessageAll|safe}};
 				
-		        var morrisDonutData1 = {{jsonFrequencyChar1|safe}};
-		
-		        var morrisDonutData2 = {{jsonFrequencyChar2|safe}};
-		
-		        var morrisDonutData3 = {{jsonFrequencyChar3|safe}};
-		
-		        var barChartData = {{jsonFrequencyWord|safe}};
-		        var intimacy = {{jsonIntimacy|safe}};
+        var morrisDonutData1 = {{jsonFrequencyChar1|safe}};
+
+        var morrisDonutData2 = {{jsonFrequencyChar2|safe}};
+
+        var morrisDonutData3 = {{jsonFrequencyChar3|safe}};
+
+        var barChartData = {{jsonFrequencyWord|safe}};
+        var intimacy = {{jsonIntimacy|safe}};
 		
 				var isOneToOne = {{isOneToOne}}
 		
@@ -364,8 +403,8 @@
 					
 					var oneToOne = {{jsonIntimacy|safe}}
 					
-					
-					//여기에 1:1 관련 로직.
+					oneOnOneBarChart("#figure", oneToOne);
+
 				}else{ // 1:1 채팅 아닐 경우 친밀도 로직.
 					$.each(intimacy, function(i, item) {
 						arrName[i] = item.name;
@@ -414,7 +453,8 @@
 
             var total = 0;
 
-            hierBarChartData.children.push({"name":"message count","children":[]});
+            hierBarChartData.children.push({"name":"메시지 개수","children":[]});
+            hierBarChartData.children.push({"name":"메시지 바이트","children":[]});
             for(var i = 0; i < dashboardData.length; i++){
                  hierBarChartData.children[0].children.push({"name": dashboardData[i].State, "size": dashboardData[i].total, "children":[]})
                  
@@ -422,7 +462,14 @@
                   hierBarChartData.children[0].children[i].children.push({"name":key, "size":dashboardData[i].freq[key]})
                  }
             }
-            // console.log(hierBarChartData)
+
+            for(var i = 0; i < dataByteMessage.length; i++){
+                 hierBarChartData.children[1].children.push({"name": dataByteMessage[i].State, "size": dataByteMessage[i].total, "children":[]})
+                 
+                 for(var key in dataByteMessage[i].freq){
+                  hierBarChartData.children[1].children[i].children.push({"name":key, "size":dataByteMessage[i].freq[key]})
+                 }
+            }
 
             for(var i = 0; i < morrisDonutData1.length; i++){
               kkChartData.children.push({"name": morrisDonutData1[i].label, "size": morrisDonutData1[i].value})
@@ -464,18 +511,7 @@
                   createHierBarChart("#uuBarChart", uuChartData);
                   createUUChart = true;
                 }
-              });
-
-              oneOnOneBarChart("#figure", oneToOne);
-		        // dotChart(data);
-		        
-		         $("#share").zclip({
-	                 path:"{% static 'js/ZeroClipboard.swf' %}",
-	                 copy:window.location.href,
-	                 afterCopy: function() {
-	                    alert('링크가 클립보드에 복사 되었습니다.');
-	                  } 
-	               });
+              });		        
 
 			});
 			function drawIntimacy(n){
@@ -516,6 +552,7 @@
 				
 				$("#intimacy_graph").html(str);
 			}
+
 		</script>	
 			
 		<footer class="bg-gray">
